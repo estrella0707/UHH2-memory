@@ -1,0 +1,29 @@
+.likert-line {
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+    gap: 10px;
+    margin: 20px 0;
+}
+.likert-scale {
+    display: flex;
+    gap: 10px;
+}
+.likert-scale input[type="radio"] {
+    display: none;
+}
+.likert-scale label {
+    width: 30px;
+    height: 30px;
+    border: 2px solid #333;
+    border-radius: 4px;
+    display: inline-block;
+    cursor: pointer;
+}
+.likert-scale input[type="radio"]:checked + label {
+    background-color: #333;
+}
+.question-label,
+.end-label {
+    white-space: nowrap;
+}
