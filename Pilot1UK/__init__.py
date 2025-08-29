@@ -5,6 +5,8 @@ import random
 doc = """
 Pilot1 on anticipatory utility and donation (online)
 """
+
+
 # FUNCTION
 def creating_session(subsession):
     # Treatment randomization
@@ -13,12 +15,14 @@ def creating_session(subsession):
     for player in subsession.get_players():
         player.task = next(task)
 
+
 def likert1(label):
     return models.IntegerField(
         initial=0,
         choices=[[1, ''], [2, ''], [3, ''], [4, ''], [5, '']],
         label=label,
         widget=widgets.RadioSelect)
+
 
 def cq_group_choices(player):
     # Shuffle choices at the first time loading the page
@@ -31,6 +35,7 @@ def cq_group_choices(player):
         player.participant.vars['cq_group_choices'] = choices
     return player.participant.vars['cq_group_choices']
 
+
 def cq_challenge_choices(player):
     # Shuffle choices at the first time loading the page
     if 'cq_challenge_choices' not in player.participant.vars:
@@ -42,13 +47,16 @@ def cq_challenge_choices(player):
         player.participant.vars['cq_challenge_choices'] = choices
     return player.participant.vars['cq_challenge_choices']
 
+
 def cq_group_error_message(player, value):
     if value != 'Immigrants with little education':
         return "This is not the correct answer. Please read and select again."
 
+
 def cq_challenge_error_message(player, value):
     if value != 'Difficulty finding stable jobs':
         return "This is not the correct answer. Please read and select again."
+
 
 def cr1_choices(player):
     choices = ['Social media → Sleep → Mood',
@@ -57,12 +65,14 @@ def cr1_choices(player):
     random.shuffle(choices)
     return choices
 
+
 def cr2_choices(player):
     choices = ['Air Pollution → Asthma ← Exercise',
                'Exercise → Asthma → Air Pollution',
                'Air Pollution → Exercise → Asthma']
     random.shuffle(choices)
     return choices
+
 
 def cr3_choices(player):
     choices = ['Eye Strain ← Smartphone Use → Distraction',
@@ -99,6 +109,7 @@ class Player(BasePlayer):
     mq_logic = models.IntegerField(choices=range(1, 8))
     mq_language = models.IntegerField(choices=range(1, 8))
     mq_agree = models.IntegerField(choices=range(1, 8))
+    control = models.IntegerField(choices=range(1, 8))
 
     # Attention check question
     aq = models.BooleanField(
@@ -148,40 +159,100 @@ class Player(BasePlayer):
 
     # Demographic variables
     age = models.IntegerField(
-        label='Enter your age. (Please leave this blank if you prefer not to say.)',
+        label='Age (Please leave this blank if you prefer not to say.)',
         blank=True
     )
     gender = models.StringField(
         widget=widgets.RadioSelect,
-        label='Identify your gender',
+        label='Gender',
         choices=['Male', 'Female', 'Non-binary', 'Prefer not to say']
     )
-    # region of residence
     education = models.StringField(
         widget=widgets.RadioSelect,
-        label='Enter your highest education level',
+        label='Highest education level',
         choices=['No formal education', 'Primary school', 'Secondary school',
                  'University', 'Postgraduate', 'Prefer not to say']
     )
-    # employment status
-    # income
-    stand = models.IntegerField(choices=range(1, 8))
-    party = models.StringField(
-        label='',
-        choices=['Conservative Party', 'Labour Party', 'Green Party', 'Reform UK',
-                 'Other (please describe if you wish)',
-                 'I do not support any party', 'Prefer not to say'],
-        widget=widgets.RadioSelect
+    region = models.StringField(
+        widget=widgets.RadioSelect,
+        label='Region of residence',
+        choices=['North East (England)', 'North West (England)', 'Yorkshire and The Humber (England)',
+                 'East Midlands (England)', 'West Midlands (England)', 'East (England)', 'London (England)',
+                 'South East (England)', 'South West (England)', 'Wales', 'Northern Ireland', 'Prefer not to say']
     )
-    party_other = models.StringField(
-        label="Please describe if you wish",
+    employ = models.StringField(
+        widget=widgets.RadioSelect,
+        label='What is your current employment status?',
+        choices=['Full-time employee', 'Part-time employee', 'Self-employed or small business owner',
+                 'Unemployed and looking for work', 'Not currently working and not looking for work',
+                 'Student', 'Retiree', 'Prefer not to say']
+    )
+    income = models.StringField(
+        widget=widgets.RadioSelect,
+        label='What was your monthly income, before taxes, on average last year?',
+        choices=['Less than £1,000', '£1,000 – £1,499', '£1,500 – £1,999', '£2,000 – £2,499', '£2,500 – £2,999',
+                 '£3,000 – £3,999', '£4,000 – £4,999', '£5,000 – £6,999', '£7,000 – £9,999', 'More than £10,000',
+                 'Prefer not to say']
+    )
+    origin_father = models.StringField(
+        widget=widgets.RadioSelect,
+        label='Where was your father born?',
+        choices=['UK', 'other countries in Europe', 'Africa', 'Asia', 'North America', 'South America',
+                 'Oceania', 'Prefer not to say']
+    )
+    origin_mother = models.StringField(
+        widget=widgets.RadioSelect,
+        label='Where was your father born?',
+        choices=['UK', 'other countries in Europe', 'Africa', 'Asia', 'North America', 'South America',
+                 'Oceania', 'Prefer not to say']
+    )
+    stand = models.IntegerField(choices=range(1, 8))
+    vote = models.BooleanField(
+        widget=widgets.RadioSelect,
+        label='Did you vote in the last general election?',
+        choices=[(True, 'Yes'), (False, 'No')]
+    )
+    vote_yes = models.StringField(
+        widget=widgets.RadioSelect,
+        label='In the last general election, you supported:',
+        choices=['Conservative Party', 'Labour Party', 'Democratic Unionist Party', 'Sinn Féin',
+                 'Liberal Democrat Party', 'Ukip', 'Green Party', 'Plaid Cymru - Party of Wales', 'Reform UK',
+                 'Other (please describe if you wish)', 'Prefer not to say'],
         blank=True,
     )
-    # prior donation
+    vote_yes_other = models.StringField(
+        label='Please describe if you wish',
+        blank=True,
+    )
+    vote_no = models.StringField(
+        widget=widgets.RadioSelect,
+        label='Even if you did NOT vote, please indicate the party that you were most likely to have voted '
+              'for or who represents your views most closely',
+        choices=['Conservative Party', 'Labour Party', 'Democratic Unionist Party', 'Sinn Féin',
+                 'Liberal Democrat Party', 'Ukip', 'Green Party', 'Plaid Cymru - Party of Wales', 'Reform UK',
+                 'Other (please describe if you wish)', 'Prefer not to say'],
+        blank=True,
+    )
+    vote_no_other = models.StringField(
+        label='Please describe if you wish',
+        blank=True,
+    )
+    donation = models.BooleanField(
+        widget=widgets.RadioSelect,
+        label='In the past 12 months, have you made any financial contributions to a charitable or '
+              'nonprofit organization or group?',
+        choices=[(True, 'Yes'), (False, 'No')]
+    )
+    donation_amount = models.FloatField(
+        label='Please indicate the amount if you wish',
+        blank=True
+    )
     worry = models.IntegerField(choices=range(1, 8))
     immi_familiar = models.IntegerField(choices=range(1, 8))
     immi_attitude = models.IntegerField(
-        label='',
+        widget=widgets.RadioSelect,
+        label='Which of the following statements most closely reflects your view on the number of legal immigrants '
+              'from foreign countries who are permitted to come to the United Kingdom to live?',
         choices=[(1, 'The excessive number of legal immigrants today is a very big problem. '
                      'We should ask many legal immigrants to leave the country, '
                      'and we should stop accepting new immigrants.'),
@@ -195,7 +266,6 @@ class Player(BasePlayer):
                      'We should let even more legal immigrants come live in the U.K. and '
                      'increase the number that is permitted to come every year. ')
                  ],
-        widget=widgets.RadioSelect
     )
 
 
@@ -206,8 +276,10 @@ class Introduction(Page):
 
 class Demographics(Page):
     form_model = 'player'
-    form_fields = ['age', 'gender', 'education', 'stand',
-                   'party', 'party_other', 'worry', 'immi_familiar', 'immi_attitude']
+    form_fields = ['age', 'gender', 'education', 'region', 'employ', 'income',
+                   'origin_father', 'origin_mother', 'stand',
+                   'vote', 'vote_yes', 'vote_yes_other', 'vote_no', 'vote_no_other',
+                   'donation', 'donation_amount', 'worry', 'immi_familiar', 'immi_attitude']
 
 
 class AC(Page):
@@ -226,10 +298,102 @@ class Nar(Page):
                    'mq_logic', 'mq_language', 'mq_agree']
 
 
-class Info(Page):
+class Info1(Page):
     @staticmethod
     def is_displayed(player: Player):
         return player.task != 'control'
+
+    @staticmethod
+    def vars_for_template(player):
+        # Map treatments to images and their values
+        image = {
+            'simple_hope': 'Pilot1UK/UK(Hopeful)_01.png',
+            'simple_unhope': 'Pilot1UK/UK(Unhopeful)_01.png',
+            'complex_hope': 'Pilot1UK/UK(Hopeful)_01.png',
+            'complex_unhope': 'Pilot1UK/UK(Unhopeful)_01.png',
+        }
+        return {
+            'image': image.get(player.task),
+        }
+
+
+class Info2(Page):
+    @staticmethod
+    def is_displayed(player: Player):
+        return player.task != 'control'
+
+    @staticmethod
+    def vars_for_template(player):
+        # Map treatments to images and their values
+        image = {
+            'simple_hope': 'Pilot1UK/UK(Hopeful)_02.png',
+            'simple_unhope': 'Pilot1UK/UK(Unhopeful)_02.png',
+            'complex_hope': 'Pilot1UK/UK(Hopeful)_02.png',
+            'complex_unhope': 'Pilot1UK/UK(Unhopeful)_02.png',
+        }
+        return {
+            'image': image.get(player.task),
+        }
+
+
+class Info3(Page):
+    @staticmethod
+    def is_displayed(player: Player):
+        return player.task != 'control'
+
+    @staticmethod
+    def vars_for_template(player):
+        # Map treatments to images and their values
+        image = {
+            'simple_hope': 'Pilot1UK/UK(Hopeful)_03.png',
+            'simple_unhope': 'Pilot1UK/UK(Unhopeful)_03.png',
+            'complex_hope': 'Pilot1UK/UK(Hopeful)_03.png',
+            'complex_unhope': 'Pilot1UK/UK(Unhopeful)_03.png',
+        }
+        return {
+            'image': image.get(player.task),
+        }
+
+
+class Info4(Page):
+    @staticmethod
+    def is_displayed(player: Player):
+        return player.task != 'control'
+
+    @staticmethod
+    def vars_for_template(player):
+        # Map treatments to images and their values
+        image = {
+            'simple_hope': 'Pilot1UK/UK(Hopeful)_04.png',
+            'simple_unhope': 'Pilot1UK/UK(Unhopeful)_04.png',
+            'complex_hope': 'Pilot1UK/UK(Hopeful)_04.png',
+            'complex_unhope': 'Pilot1UK/UK(Unhopeful)_04.png',
+        }
+        return {
+            'image': image.get(player.task),
+        }
+
+
+class Info5(Page):
+    @staticmethod
+    def is_displayed(player: Player):
+        return player.task != 'control'
+
+    @staticmethod
+    def vars_for_template(player):
+        # Map treatments to images and their values
+        image = {
+            'simple_hope': 'Pilot1UK/UK(Hopeful)_05.png',
+            'simple_unhope': 'Pilot1UK/UK(Unhopeful)_05.png',
+            'complex_hope': 'Pilot1UK/UK(Hopeful)_05.png',
+            'complex_unhope': 'Pilot1UK/UK(Unhopeful)_05.png',
+        }
+        return {
+            'image': image.get(player.task),
+        }
+
+    form_model = 'player'
+    form_fields = ['control']
 
 
 class Memory(Page):
@@ -270,7 +434,7 @@ page_sequence = [
     AC,  # attention check
     CR,  # measure of causal reasoning ability
     Nar,  # narrative treatment
-    # information slides
+    Info1, Info2, Info3, Info4, Info5,  # information slides
     Memory,  # memory test
     NGO1,  # advisor choice
     NGO2,  # NGO introduction
