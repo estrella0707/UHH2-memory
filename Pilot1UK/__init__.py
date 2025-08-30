@@ -84,7 +84,7 @@ def cr3_choices(player):
 
 # PARAMETERS
 class C(BaseConstants):
-    NAME_IN_URL = 'pt1'
+    NAME_IN_URL = 'pt1uk'
     PLAYERS_PER_GROUP = None
     NUM_ROUNDS = 1
 
@@ -174,34 +174,29 @@ class Player(BasePlayer):
                  'University', 'Postgraduate', 'Prefer not to say']
     )
     region = models.StringField(
-        widget=widgets.RadioSelect,
         label='Region of residence',
         choices=['North East (England)', 'North West (England)', 'Yorkshire and The Humber (England)',
                  'East Midlands (England)', 'West Midlands (England)', 'East (England)', 'London (England)',
                  'South East (England)', 'South West (England)', 'Wales', 'Northern Ireland', 'Prefer not to say']
     )
     employ = models.StringField(
-        widget=widgets.RadioSelect,
         label='What is your current employment status?',
         choices=['Full-time employee', 'Part-time employee', 'Self-employed or small business owner',
                  'Unemployed and looking for work', 'Not currently working and not looking for work',
                  'Student', 'Retiree', 'Prefer not to say']
     )
     income = models.StringField(
-        widget=widgets.RadioSelect,
         label='What was your monthly income, before taxes, on average last year?',
         choices=['Less than £1,000', '£1,000 – £1,499', '£1,500 – £1,999', '£2,000 – £2,499', '£2,500 – £2,999',
                  '£3,000 – £3,999', '£4,000 – £4,999', '£5,000 – £6,999', '£7,000 – £9,999', 'More than £10,000',
                  'Prefer not to say']
     )
     origin_father = models.StringField(
-        widget=widgets.RadioSelect,
         label='Where was your father born?',
         choices=['UK', 'other countries in Europe', 'Africa', 'Asia', 'North America', 'South America',
                  'Oceania', 'Prefer not to say']
     )
     origin_mother = models.StringField(
-        widget=widgets.RadioSelect,
         label='Where was your father born?',
         choices=['UK', 'other countries in Europe', 'Africa', 'Asia', 'North America', 'South America',
                  'Oceania', 'Prefer not to say']
@@ -213,7 +208,6 @@ class Player(BasePlayer):
         choices=[(True, 'Yes'), (False, 'No')]
     )
     vote_yes = models.StringField(
-        widget=widgets.RadioSelect,
         label='In the last general election, you supported:',
         choices=['Conservative Party', 'Labour Party', 'Democratic Unionist Party', 'Sinn Féin',
                  'Liberal Democrat Party', 'Ukip', 'Green Party', 'Plaid Cymru - Party of Wales', 'Reform UK',
@@ -225,7 +219,6 @@ class Player(BasePlayer):
         blank=True,
     )
     vote_no = models.StringField(
-        widget=widgets.RadioSelect,
         label='Even if you did NOT vote, please indicate the party that you were most likely to have voted '
               'for or who represents your views most closely',
         choices=['Conservative Party', 'Labour Party', 'Democratic Unionist Party', 'Sinn Féin',
