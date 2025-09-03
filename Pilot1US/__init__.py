@@ -209,7 +209,7 @@ class Player(BasePlayer):
                  'Oceania', 'Prefer not to say']
     )
     origin_mother = models.StringField(
-        label='Where was your father born?',
+        label='Where was your mother born?',
         choices=['US', 'other countries in North America', 'Africa', 'Europe', 'Asia', 'South America',
                  'Oceania', 'Prefer not to say']
     )
