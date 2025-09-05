@@ -92,7 +92,7 @@ US_STATES = [
     'North Dakota', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania',
     'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas',
     'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin',
-    'Wyoming', 'Prefer not to say'
+    'Wyoming', 'District of Columbia', 'American Samoa', 'Guam', 'Northern Mariana Islands', 'Puerto Rico', 'U.S. Virgin Islands','Prefer not to say'
 ]
 
 
@@ -381,7 +381,7 @@ class Info5(Page):
         # Map treatments to images and their values
         image = {
             'simple_hope': 'Pilot1US/US(Hopeful)_05.png',
-            'simple_unhope': 'Pilot1UUS/US(Unhopeful)_05.png',
+            'simple_unhope': 'Pilot1US/US(Unhopeful)_05.png',
             'complex_hope': 'Pilot1US/US(Hopeful)_05.png',
             'complex_unhope': 'Pilot1US/US(Unhopeful)_05.png',
         }
