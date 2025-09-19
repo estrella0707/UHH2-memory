@@ -116,7 +116,7 @@ class Player(BasePlayer):
         label='',
         choices=[(True, 'Yes, I have devoted full attention to the questions so far and '
                         'I think you should use my responses for your study.'),
-                 (False, 'No, I have NOT devoted full attention to the questions so far and'
+                 (False, 'No, I have NOT devoted full attention to the questions so far and '
                          'I think you should NOT use my responses for your study.')],
         widget=widgets.RadioSelect
     )
@@ -193,12 +193,12 @@ class Player(BasePlayer):
     )
     origin_father = models.StringField(
         label='Where was your father born?',
-        choices=['UK', 'other countries in Europe', 'Africa', 'Asia', 'North America', 'South America',
+        choices=['UK', 'other countries in Europe', 'Africa', 'Asia', 'US or Canada', 'Latin America',
                  'Oceania', 'Prefer not to say']
     )
     origin_mother = models.StringField(
         label='Where was your mother born?',
-        choices=['UK', 'other countries in Europe', 'Africa', 'Asia', 'North America', 'South America',
+        choices=['UK', 'other countries in Europe', 'Africa', 'Asia', 'US or Canada', 'Latin America',
                  'Oceania', 'Prefer not to say']
     )
     stand = models.IntegerField(choices=range(1, 8))
@@ -237,27 +237,26 @@ class Player(BasePlayer):
         choices=[(True, 'Yes'), (False, 'No')]
     )
     donation_amount = models.FloatField(
-        label='Please indicate the amount if you wish',
+        label='Please indicate the amount in GBP(£) if you wish',
         blank=True
     )
     worry = models.IntegerField(choices=range(1, 8))
     immi_familiar = models.IntegerField(choices=range(1, 8))
     immi_attitude = models.IntegerField(
         widget=widgets.RadioSelect,
-        label='Which of the following statements most closely reflects your view on the number of legal immigrants '
-              'from foreign countries who are permitted to come to the United Kingdom to live?',
-        choices=[(1, 'The excessive number of legal immigrants today is a very big problem. '
-                     'We should ask many legal immigrants to leave the country, '
-                     'and we should stop accepting new immigrants.'),
-                 (2, 'The number of legal immigrants today is a big problem, '
-                     'and we should decrease by a lot the number permitted to come to the U.K. in the future. '),
-                 (3, 'The number of legal immigrants today is somewhat of a problem, '
-                     'and we should try and decrease a bit the number permitted to come in.'),
+        label='Which of the following statements most closely reflect your view on the number of <b>legal immigrants</b> '
+              'who are permitted to come to the United Kingdom to live?',
+        choices=[(1, 'The number of legal immigrants today is a very big problem. '
+                     'We should ask many legal immigrants to leave the UK, '
+                     'and stop accepting new immigrants.'),
+                 (2, 'The number of legal immigrants today is a big problem. '
+                     'We should decrease by a lot the number permitted to come to the UK. '),
+                 (3, 'The number of legal immigrants today is somewhat of a problem. '
+                     'We should try and decrease by a bit the number permitted to come to the UK. '),
                  (4, 'The number of legal immigrants today is not a problem. '
-                     'We should keep letting in the same number of immigrants each year as until now. '),
+                     'We should keep letting in the same number of immigrants to come to the UK. '),
                  (5, 'The number of legal immigrants today is not a problem at all. '
-                     'We should let even more legal immigrants come live in the U.K. and '
-                     'increase the number that is permitted to come every year. ')
+                     'We should let even more legal immigrants come to the UK. ')
                  ],
     )
 
