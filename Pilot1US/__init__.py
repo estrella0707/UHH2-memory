@@ -157,9 +157,10 @@ class Player(BasePlayer):
         label='',
         choices=[(1, 'Advisor 1: I advise you to support a program that reduces the number of immigrants '
                      'without stable jobs in order to reduce the crime rate.'),
-                 (2, 'Advisor 2: I advise you to support a program that help immigrants find employment. ')],
+                 (2, 'Advisor 2: I advise you to support a program that helps immigrants find employment. ')],
         widget=widgets.RadioSelect
     )
+    share = models.IntegerField(choices=range(1, 8))
     decision = models.BooleanField(
         label='Would you like to donate?',
         choices=[(True, 'Yes'), (False, 'No')],
@@ -168,13 +169,12 @@ class Player(BasePlayer):
     amount = models.FloatField(
         label='How much would you like to donate?',
         min=0,
-        max=5
+        max=3
     )
 
     # Demographic variables
     age = models.IntegerField(
-        label='Age (Please leave this blank if you prefer not to say.)',
-        blank=True
+        label='Age'
     )
     gender = models.StringField(
         widget=widgets.RadioSelect,
@@ -229,7 +229,7 @@ class Player(BasePlayer):
     vote_no = models.StringField(
         widget=widgets.RadioSelect,
         label='Even if you did NOT vote, please indicate the party that you were most likely to have voted '
-              'for or who represents your views most closely',
+              'for or who represents your views most closely:',
         choices=['Kamala Harris', 'Donald Trump', 'Other candidates', 'Prefer not to say'],
         blank=True,
     )
@@ -241,7 +241,7 @@ class Player(BasePlayer):
         choices=[(True, 'Yes'), (False, 'No')]
     )
     donation_amount = models.FloatField(
-        label='Please indicate the amount in USD($) if you wish ',
+        label='Please indicate the amount in GBP if you wish. (Please enter a number only, without the symbol(£).',
         blank=True
     )
     worry = models.IntegerField(choices=range(1, 8))
@@ -289,6 +289,10 @@ class CR(Page):
 
 
 class Nar(Page):
+    @staticmethod
+    def is_displayed(player: Player):
+        return player.task != 'control'
+
     form_model = 'player'
     form_fields = ['cq_group', 'cq_challenge',
                    'mq_logic', 'mq_language', 'mq_agree']
@@ -388,11 +392,21 @@ class Info5(Page):
             'image': image.get(player.task),
         }
 
+
+class Control(Page):
+    @staticmethod
+    def is_displayed(player: Player):
+        return player.task != 'control'
+
     form_model = 'player'
     form_fields = ['control']
 
 
 class Memory(Page):
+    @staticmethod
+    def is_displayed(player: Player):
+        return player.task != 'control'
+
     form_model = 'player'
     form_fields = ['memory']
 
@@ -403,7 +417,8 @@ class NGO1(Page):
 
 
 class NGO2(Page):
-    pass
+    form_model = 'player'
+    form_fields = ['share']
 
 
 class Donation1(Page):
@@ -431,6 +446,7 @@ page_sequence = [
     CR,  # measure of causal reasoning ability
     Nar,  # narrative treatment
     Info1, Info2, Info3, Info4, Info5,  # information slides
+    Control,  # perceived control
     Memory,  # memory test
     NGO1,  # advisor choice
     NGO2,  # NGO introduction

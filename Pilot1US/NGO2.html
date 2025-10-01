@@ -6,13 +6,38 @@
 {{ endblock }}
 
 {{ block content }}
+You have chosen
+{% if player.advisor == 1 %}
+    <b>Advisor 1</b>: I advise you to support a program that reduces the number of immigrants without stable jobs in order to reduce the crime rate.
+{% elif player.advisor == 2 %}
+    <b>Advisor 2</b>: I advise you to support a program that helps immigrants find employment.
+{% endif %}
+<br><br>
+
 <p>You are now introduced to a real Non-profit organization that is in line with your chosen advisor’s suggestion. </p>
 <div class="card border-dark">
     <div class="card-body">
-         <p class="card-text"><b>Upwardly Global</b> is a US-based nonprofit organization that helps work-authorized immigrants, refugees, and asylees restart their professional careers. They provide free services such as career coaching, industry-specific training, CV and interview preparation, and networking opportunities to assist newcomers in securing employment aligned with their skills and experience.<br>
+        <p class="card-text"><b>Upwardly Global</b> is a US-based nonprofit organization that helps work-authorized immigrants, refugees, and asylees restart their professional careers. They provide free services such as career coaching, industry-specific training, CV and interview preparation, and networking opportunities to assist newcomers in securing employment aligned with their skills and experience.<br>
+        <p class="card-text"><i>Link to their website: https://www.upwardlyglobal.org/ </i><br>
     </div>
 </div>
-{{ formfields }}
+
+{% load static %}
+<link rel="stylesheet" href="{% static 'likert.css' %}">
+<p><b>How likely will you be to share the information about this NGO with your families and/or friends, or to share it on social media?</b></p>
+<p>Reducing the number of immigrants without stables jobs reduces the crime rate.</p>
+<div class="likert-line">
+    <span class="question-label"></span>
+    <span class="end-label">Very unlikely</span>
+    <div class="likert-scale">
+        {% for i in "1234567" %}
+        <input type="radio" name="share" id="share{{ i }}" value="{{ i }}">
+        <label for="share{{ i }}"></label>
+        {% endfor %}
+    </div>
+    <span class="end-label">Very likely</span>
+</div>
+
 <br>
 
 {{ next_button }}
