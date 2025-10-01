@@ -143,9 +143,10 @@ class Player(BasePlayer):
         label='',
         choices=[(1, 'Advisor 1: I advise you to support a program that reduces the number of immigrants '
                      'without stable jobs in order to reduce the crime rate.'),
-                 (2, 'Advisor 2: I advise you to support a program that help immigrants find employment. ')],
+                 (2, 'Advisor 2: I advise you to support a program thats help immigrants find employment. ')],
         widget=widgets.RadioSelect
     )
+    share = models.IntegerField(choices=range(1, 8))
     decision = models.BooleanField(
         label='Would you like to donate?',
         choices=[(True, 'Yes'), (False, 'No')],
@@ -154,13 +155,12 @@ class Player(BasePlayer):
     amount = models.FloatField(
         label='How much would you like to donate?',
         min=0,
-        max=5
+        max=3
     )
 
     # Demographic variables
     age = models.IntegerField(
-        label='Age (Please leave this blank if you prefer not to say.)',
-        blank=True
+        label='Age'
     )
     gender = models.StringField(
         widget=widgets.RadioSelect,
@@ -210,24 +210,16 @@ class Player(BasePlayer):
     vote_yes = models.StringField(
         label='In the last general election, you supported:',
         choices=['Conservative Party', 'Labour Party', 'Democratic Unionist Party', 'Sinn Féin',
-                 'Liberal Democrat Party', 'Ukip', 'Green Party', 'Plaid Cymru - Party of Wales', 'Reform UK',
-                 'Other (please describe if you wish)', 'Prefer not to say'],
-        blank=True,
-    )
-    vote_yes_other = models.StringField(
-        label='Please describe if you wish',
+                 'Liberal Democrats', 'Ukip', 'Green Party', 'Plaid Cymru - Party of Wales', 'Reform UK',
+                 'Other', 'Prefer not to say'],
         blank=True,
     )
     vote_no = models.StringField(
         label='Even if you did NOT vote, please indicate the party that you were most likely to have voted '
-              'for or who represents your views most closely',
+              'for or who represents your views most closely:',
         choices=['Conservative Party', 'Labour Party', 'Democratic Unionist Party', 'Sinn Féin',
-                 'Liberal Democrat Party', 'Ukip', 'Green Party', 'Plaid Cymru - Party of Wales', 'Reform UK',
-                 'Other (please describe if you wish)', 'Prefer not to say'],
-        blank=True,
-    )
-    vote_no_other = models.StringField(
-        label='Please describe if you wish',
+                 'Liberal Democrats', 'Ukip', 'Green Party', 'Plaid Cymru - Party of Wales', 'Reform UK',
+                 'Other', 'Prefer not to say'],
         blank=True,
     )
     donation = models.BooleanField(
@@ -237,7 +229,7 @@ class Player(BasePlayer):
         choices=[(True, 'Yes'), (False, 'No')]
     )
     donation_amount = models.FloatField(
-        label='Please indicate the amount in GBP(£) if you wish',
+        label='Please indicate the amount in GBP if you wish. (Please enter a number only, without the symbol(£).',
         blank=True
     )
     worry = models.IntegerField(choices=range(1, 8))
@@ -270,7 +262,7 @@ class Demographics(Page):
     form_model = 'player'
     form_fields = ['age', 'gender', 'education', 'region', 'employ', 'income',
                    'origin_father', 'origin_mother', 'stand',
-                   'vote', 'vote_yes', 'vote_yes_other', 'vote_no', 'vote_no_other',
+                   'vote', 'vote_yes', 'vote_no',
                    'donation', 'donation_amount', 'worry', 'immi_familiar', 'immi_attitude']
 
 
@@ -285,6 +277,10 @@ class CR(Page):
 
 
 class Nar(Page):
+    @staticmethod
+    def is_displayed(player: Player):
+        return player.task != 'control'
+
     form_model = 'player'
     form_fields = ['cq_group', 'cq_challenge',
                    'mq_logic', 'mq_language', 'mq_agree']
@@ -384,11 +380,21 @@ class Info5(Page):
             'image': image.get(player.task),
         }
 
+
+class Control(Page):
+    @staticmethod
+    def is_displayed(player: Player):
+        return player.task != 'control'
+
     form_model = 'player'
     form_fields = ['control']
 
 
 class Memory(Page):
+    @staticmethod
+    def is_displayed(player: Player):
+        return player.task != 'control'
+    
     form_model = 'player'
     form_fields = ['memory']
 
@@ -399,7 +405,8 @@ class NGO1(Page):
 
 
 class NGO2(Page):
-    pass
+    form_model = 'player'
+    form_fields = ['share']
 
 
 class Donation1(Page):
@@ -427,6 +434,7 @@ page_sequence = [
     CR,  # measure of causal reasoning ability
     Nar,  # narrative treatment
     Info1, Info2, Info3, Info4, Info5,  # information slides
+    Control,  # perceived control
     Memory,  # memory test
     NGO1,  # advisor choice
     NGO2,  # NGO introduction

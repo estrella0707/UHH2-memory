@@ -34,32 +34,26 @@ Please answer the following questions.
 {{ formfield player.origin_mother }}
 <br>
 
-To what extent you agree or disagree with the following statements: The less that government intervenes in the economy, the better it is for the UK.
+To what extent you agree or disagree with the following statements: <i>The less that government intervenes in the economy, the better it is for the UK</i>.
 <div class="likert-line">
     <span class="question-label"></span>
-    <span class="end-label">Disagree strongly</span>
+    <span class="end-label">Strongly disagree</span>
     <div class="likert-scale">
         {% for i in "1234567" %}
         <input type="radio" name="stand" id="stand{{ i }}" value="{{ i }}">
         <label for="stand{{ i }}"></label>
         {% endfor %}
     </div>
-    <span class="end-label">Agree strongly</span>
+    <span class="end-label">Strongly agree</span>
 </div>
 <br>
 
 {{ formfield player.vote }}
 <div id="vote_yes_group">
     {{ formfield player.vote_yes }}
-    <div id="vote_yes_other">
-        {{ formfield player.vote_yes_other }}
-    </div>
 </div>
 <div id="vote_no_group">
     {{ formfield player.vote_no }}
-    <div id="vote_no_other">
-        {{ formfield player.vote_no_other }}
-    </div>
 </div>
 <style>
 #vote_yes_group, #vote_no_group {
@@ -74,7 +68,7 @@ To what extent you agree or disagree with the following statements: The less tha
 </div>
 <br>
 
-Are you worried about crimes in your daily life?
+How much, if at all, are you worried about crimes in your daily life?
 <div class="likert-line">
     <span class="question-label"></span>
     <span class="end-label">Not worried at all</span>
@@ -88,7 +82,7 @@ Are you worried about crimes in your daily life?
 </div>
 <br>
 
-Are you familiar with immigration issues in the UK?
+How much, if at all, are you familiar with immigration issues in the UK?
 <div class="likert-line">
     <span class="question-label"></span>
     <span class="end-label">Not familiar at all</span>
@@ -113,33 +107,6 @@ Are you familiar with immigration issues in the UK?
 {% block scripts %}
 
 <script type="text/javascript">
-
-toggle_other_visible = function(name)
-{
-    var other_ele = document.querySelector('#'+name+'_other');
-    document.querySelectorAll('input[name=' + name + ']')
-        .forEach(function(ele)
-        {
-            ele.addEventListener("change", function()
-            {
-                var other_ele = document.querySelector('#'+name+'_other');
-                if(document.querySelector('input[name="' + name + '"]:checked').value == 'Other (please describe if you wish)')
-                {other_ele.style="display: block;"}
-                else
-                {other_ele.style="display: none;"}
-            });
-        });
-    try
-    {
-        if(!document.querySelector('input[name="' + name + '"]:checked').value == 'Other (please describe if you wish)')
-        {other_ele.style="display: none;"}
-    }
-    catch (TypeError)
-    {other_ele.style="display: none;"}
-}
-toggle_other_visible("vote_yes");
-toggle_other_visible("vote_no");
-
 
 function toggleVoteFields() {
     const vote = document.querySelector('input[name="vote"]:checked');
