@@ -110,6 +110,11 @@ class Player(BasePlayer):
     mq_language = models.IntegerField(choices=range(1, 8))
     mq_agree = models.IntegerField(choices=range(1, 8))
     control = models.IntegerField(choices=range(1, 8))
+    afraid = likert1('Afraid')
+    scared = likert1('Scared')
+    frightened = likert1('Frightened')
+    nervous = likert1('Nervous')
+    jittery = likert1('Jittery')
 
     # Attention check question
     aq = models.BooleanField(
@@ -156,6 +161,22 @@ class Player(BasePlayer):
         label='How much would you like to donate?',
         min=0,
         max=3
+    )
+
+    # Feedback, for pilot only
+    sell = models.BooleanField(
+        label='Do you think, if any, that we attempt to sell anything to you?',
+        choices=[(True, 'Yes'), (False, 'No')],
+        widget=widgets.RadioSelect,
+        blank=True
+    )
+    purpose = models.StringField(
+        label='What do you think is its purpose? (optional)',
+        blank=True
+    )
+    feedback = models.LongStringField(
+        label='If you have any feedback to this study, please leave it here. (optional)',
+        blank=True
     )
 
     # Demographic variables
@@ -381,6 +402,17 @@ class Info5(Page):
         }
 
 
+class Emotion(Page):
+    form_model = 'player'
+
+    @staticmethod
+    def get_form_fields(player: Player):
+        import random
+        survey = ['afraid', 'scared', 'frightened', 'nervous', 'jittery']
+        random.shuffle(survey)
+        return survey
+
+
 class Control(Page):
     @staticmethod
     def is_displayed(player: Player):
@@ -423,6 +455,11 @@ class Donation2(Page):
     form_fields = ['amount']
 
 
+class Feedback(Page):
+    form_model = 'player'
+    form_fields = ['sell', 'purpose', 'feedback']
+
+
 class ProlificCompletion(Page):
     pass
 
@@ -434,11 +471,13 @@ page_sequence = [
     CR,  # measure of causal reasoning ability
     Nar,  # narrative treatment
     Info1, Info2, Info3, Info4, Info5,  # information slides
+    Emotion,  # scare
     Control,  # perceived control
     Memory,  # memory test
     NGO1,  # advisor choice
     NGO2,  # NGO introduction
     Donation1,  # choose whether to donate
     Donation2,  # enter donation amount
+    Feedback,
     ProlificCompletion
 ]
