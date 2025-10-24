@@ -10,8 +10,8 @@ Pilot1 on anticipatory utility and donation (online)
 # FUNCTION
 def creating_session(subsession):
     # Treatment randomization
-    task = itertools.cycle(['simple_hope', 'simple_unhope', 'complex_hope',
-                            'complex_unhope', 'control'])
+    task = itertools.cycle(['simple_hope', 'simple_unhope', 'simple_control',
+                            'complex_hope', 'complex_unhope', 'complex_control'])
     for player in subsession.get_players():
         player.task = next(task)
 
@@ -297,20 +297,20 @@ class Demographics(Page):
                    'worry', 'immi_familiar', 'immi_attitude']
 
 
-class AC(Page):
-    form_model = 'player'
-    form_fields = ['aq']
-
-
 class CR(Page):
     form_model = 'player'
     form_fields = ['cr1', 'cr2', 'cr3']
 
 
+class AC(Page):
+    form_model = 'player'
+    form_fields = ['aq']
+
+
 class Nar(Page):
     @staticmethod
     def is_displayed(player: Player):
-        return player.task != 'control'
+        return player.task != 'simple_control' and player.task != 'complex_control'
 
     form_model = 'player'
     form_fields = ['cq_group', 'cq_challenge',
@@ -320,7 +320,7 @@ class Nar(Page):
 class Info1(Page):
     @staticmethod
     def is_displayed(player: Player):
-        return player.task != 'control'
+        return player.task != 'simple_control' and player.task != 'complex_control'
 
     @staticmethod
     def vars_for_template(player):
@@ -339,7 +339,7 @@ class Info1(Page):
 class Info2(Page):
     @staticmethod
     def is_displayed(player: Player):
-        return player.task != 'control'
+        return player.task != 'simple_control' and player.task != 'complex_control'
 
     @staticmethod
     def vars_for_template(player):
@@ -358,7 +358,7 @@ class Info2(Page):
 class Info3(Page):
     @staticmethod
     def is_displayed(player: Player):
-        return player.task != 'control'
+        return player.task != 'simple_control' and player.task != 'complex_control'
 
     @staticmethod
     def vars_for_template(player):
@@ -377,7 +377,7 @@ class Info3(Page):
 class Info4(Page):
     @staticmethod
     def is_displayed(player: Player):
-        return player.task != 'control'
+        return player.task != 'simple_control' and player.task != 'complex_control'
 
     @staticmethod
     def vars_for_template(player):
@@ -396,7 +396,7 @@ class Info4(Page):
 class Info5(Page):
     @staticmethod
     def is_displayed(player: Player):
-        return player.task != 'control'
+        return player.task != 'simple_control' and player.task != 'complex_control'
 
     @staticmethod
     def vars_for_template(player):
@@ -413,6 +413,10 @@ class Info5(Page):
 
 
 class Emotion(Page):
+    @staticmethod
+    def is_displayed(player: Player):
+        return player.task != 'simple_control' and player.task != 'complex_control'
+
     form_model = 'player'
 
     @staticmethod
@@ -426,7 +430,7 @@ class Emotion(Page):
 class Control(Page):
     @staticmethod
     def is_displayed(player: Player):
-        return player.task != 'control'
+        return player.task != 'simple_control' and player.task != 'complex_control'
 
     form_model = 'player'
     form_fields = ['control']
@@ -435,7 +439,7 @@ class Control(Page):
 class Memory1(Page):
     @staticmethod
     def is_displayed(player: Player):
-        return player.task != 'control'
+        return player.task != 'simple_control' and player.task != 'complex_control'
     
     form_model = 'player'
     form_fields = ['memory1']
@@ -444,7 +448,7 @@ class Memory1(Page):
 class Memory2(Page):
     @staticmethod
     def is_displayed(player: Player):
-        return player.task != 'control'
+        return player.task != 'simple_control' and player.task != 'complex_control'
 
     form_model = 'player'
     form_fields = ['memory2']
@@ -468,6 +472,15 @@ class Petition(Page):
         return [petition['name'] for petition in C.PETITION]
 
 
+class Understand(Page):
+    @staticmethod
+    def is_displayed(player: Player):
+        return player.task == 'simple_control' or player.task == 'complex_control'
+
+    form_model = 'player'
+    form_fields = ['memory1', 'memory2']
+
+
 class Feedback(Page):
     form_model = 'player'
     form_fields = ['sell', 'purpose', 'feedback']
@@ -480,8 +493,8 @@ class ProlificCompletion(Page):
 page_sequence = [
     Introduction,
     Demographics,
-    AC,  # attention check
     CR,  # measure of causal reasoning ability
+    AC,  # attention check
     Nar,  # narrative treatment
     Info1, Info2, Info3, Info4, Info5,  # information slides
     Emotion,  # scare
@@ -489,6 +502,7 @@ page_sequence = [
     Memory1, Memory2,  # memory test
     NGO1, NGO2,  # intention to share information
     Petition,  # choose whether to receive emails
+    Understand,  # baseline understanding of the narratives (control group)
     Feedback,
     ProlificCompletion
 ]
