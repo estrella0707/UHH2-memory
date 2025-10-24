@@ -82,11 +82,32 @@ def cr3_choices(player):
     return choices
 
 
+def memory2_choices(player):
+    choices = ['Increasing immigrant employment decreases the crime rate.',
+               'The worsening of the economy leads to both an increase in the crime rate and a decrease in immigrant employment.',
+               'Increasing immigrant employment improves the economy. Economic improvement decreases the crime rate.',
+               'Decreasing the crime rate improves the economy. Economic improvement increases immigrant employment.']
+    random.shuffle(choices)
+    return choices
+
+
 # PARAMETERS
 class C(BaseConstants):
     NAME_IN_URL = 'pt1uk'
     PLAYERS_PER_GROUP = None
     NUM_ROUNDS = 1
+
+    # List of petitions
+    PETITION = [
+        dict(name='research', label="Some call for more publicly funded research (e.g., those funded by UKRI) "
+                                    "into the connection between immigrant status and crime."),
+        dict(name='language', label="Some advocate for higher language requirements for all immigrants arriving in "
+                                    "the UK who are unemployed, in order to make them more employable."),
+        dict(name='period', label="Some propose reducing the period that immigrants are permitted to stay in the "
+                                  "UK after becoming unemployed."),
+        dict(name='quota', label="Some demand lowering the quota of all types of immigrants allowed to enter the UK, "
+                                 "EXCEPT those under the Skilled Worker category."),
+    ]
 
 
 class Subsession(BaseSubsession):
@@ -141,9 +162,13 @@ class Player(BasePlayer):
     )
 
     # Memory test question
-    memory = models.IntegerField(choices=range(1, 8))
+    memory1 = models.IntegerField(choices=range(1, 8))
+    memory2 = models.StringField(
+        label='Which of the following statements most closely reflects the message of the text?',
+        widget=widgets.RadioSelect
+    )
 
-    # Donation decision
+    # Behavioral measurements: intention to share
     advisor = models.IntegerField(
         label='',
         choices=[(1, 'Advisor 1: I advise you to support a program that reduces the number of immigrants '
@@ -152,30 +177,25 @@ class Player(BasePlayer):
         widget=widgets.RadioSelect
     )
     share = models.IntegerField(choices=range(1, 8))
-    decision = models.BooleanField(
-        label='Would you like to donate?',
-        choices=[(True, 'Yes'), (False, 'No')],
-        widget=widgets.RadioSelect
-    )
-    amount = models.FloatField(
-        label='How much would you like to donate?',
-        min=0,
-        max=3
-    )
+    # Behavioral measurements: petitions
+    research = models.BooleanField(blank=True, initial=0)
+    language = models.BooleanField(blank=True, initial=0)
+    period = models.BooleanField(blank=True, initial=0)
+    quota = models.BooleanField(blank=True, initial=0)
 
     # Feedback, for pilot only
     sell = models.BooleanField(
-        label='Do you think, if any, that we attempt to sell anything to you?',
+        label='Did you think during the study that we attempted to sell anything to you?',
         choices=[(True, 'Yes'), (False, 'No')],
         widget=widgets.RadioSelect,
         blank=True
     )
-    purpose = models.StringField(
-        label='What do you think is its purpose? (optional)',
+    purpose = models.LongStringField(
+        label='Do you have any idea about the purpose of this study? If yes, please briefly describe in the text field. (optional)',
         blank=True
     )
     feedback = models.LongStringField(
-        label='If you have any feedback to this study, please leave it here. (optional)',
+        label='If you have any other feedback to this study, please leave it here. (optional)',
         blank=True
     )
 
@@ -243,16 +263,6 @@ class Player(BasePlayer):
                  'Other', 'Prefer not to say'],
         blank=True,
     )
-    donation = models.BooleanField(
-        widget=widgets.RadioSelect,
-        label='In the past 12 months, have you made any financial contributions to a charitable or '
-              'nonprofit organization or group?',
-        choices=[(True, 'Yes'), (False, 'No')]
-    )
-    donation_amount = models.FloatField(
-        label='Please indicate the amount in GBP if you wish. (Please enter a number only, without the symbol(£).',
-        blank=True
-    )
     worry = models.IntegerField(choices=range(1, 8))
     immi_familiar = models.IntegerField(choices=range(1, 8))
     immi_attitude = models.IntegerField(
@@ -284,7 +294,7 @@ class Demographics(Page):
     form_fields = ['age', 'gender', 'education', 'region', 'employ', 'income',
                    'origin_father', 'origin_mother', 'stand',
                    'vote', 'vote_yes', 'vote_no',
-                   'donation', 'donation_amount', 'worry', 'immi_familiar', 'immi_attitude']
+                   'worry', 'immi_familiar', 'immi_attitude']
 
 
 class AC(Page):
@@ -422,13 +432,22 @@ class Control(Page):
     form_fields = ['control']
 
 
-class Memory(Page):
+class Memory1(Page):
     @staticmethod
     def is_displayed(player: Player):
         return player.task != 'control'
     
     form_model = 'player'
-    form_fields = ['memory']
+    form_fields = ['memory1']
+
+
+class Memory2(Page):
+    @staticmethod
+    def is_displayed(player: Player):
+        return player.task != 'control'
+
+    form_model = 'player'
+    form_fields = ['memory2']
 
 
 class NGO1(Page):
@@ -441,18 +460,12 @@ class NGO2(Page):
     form_fields = ['share']
 
 
-class Donation1(Page):
+class Petition(Page):
     form_model = 'player'
-    form_fields = ['decision']
 
-
-class Donation2(Page):
     @staticmethod
-    def is_displayed(player: Player):
-        return player.decision == True
-
-    form_model = 'player'
-    form_fields = ['amount']
+    def get_form_fields(player: Player):
+        return [petition['name'] for petition in C.PETITION]
 
 
 class Feedback(Page):
@@ -473,11 +486,9 @@ page_sequence = [
     Info1, Info2, Info3, Info4, Info5,  # information slides
     Emotion,  # scare
     Control,  # perceived control
-    Memory,  # memory test
-    NGO1,  # advisor choice
-    NGO2,  # NGO introduction
-    Donation1,  # choose whether to donate
-    Donation2,  # enter donation amount
+    Memory1, Memory2,  # memory test
+    NGO1, NGO2,  # intention to share information
+    Petition,  # choose whether to receive emails
     Feedback,
     ProlificCompletion
 ]

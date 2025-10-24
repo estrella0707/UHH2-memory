@@ -62,12 +62,6 @@ To what extent you agree or disagree with the following statements: <i>The less 
 </style>
 <br>
 
-{{ formfield player.donation }}
-<div id="donation_amount">
-    {{ formfield player.donation_amount }}
-</div>
-<br>
-
 How much, if at all, are you worried about crimes in your daily life?
 <div class="likert-line">
     <span class="question-label"></span>
@@ -131,26 +125,6 @@ document.addEventListener("change", function(e) {
         toggleVoteFields(); // run whenever vote changes
     }
 });
-
-
-function toggleDonationFields() {
-    const donation = document.querySelector('input[name="donation"]:checked');
-    const group = document.getElementById('donation_amount');
-
-    if (donation && donation.value === "True") {
-        group.style.display = "block";
-    }
-    else {
-        group.style.display = "none";
-    }
-}
-window.onload = toggleDonationFields; // run on page load
-document.addEventListener("change", function(e) {
-    if (e.target.name === "donation") {
-        toggleDonationFields(); // run whenever vote changes
-    }
-});
-
 
 </script>
 

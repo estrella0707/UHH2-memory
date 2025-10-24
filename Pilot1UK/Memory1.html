@@ -1,0 +1,28 @@
+{{ block title }}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous">
+{{ endblock }}
+
+{{ block content }}
+{% load static %}
+<link rel="stylesheet" href="{% static 'likert.css' %}">
+
+<p><b>Consider the following message:</b> Reducing the number of immigrants without stables jobs reduces the crime rate.<br>
+How certain are you that this message is contained / is not contained in the text you have read?</p>
+<div class="likert-line">
+    <span class="question-label"></span>
+    <span class="end-label">Certain this message was NOT in the text</span>
+    <div class="likert-scale">
+        {% for i in "1234567" %}
+        <input type="radio" name="memory1" id="memory1{{ i }}" value="{{ i }}">
+        <label for="memory1{{ i }}"></label>
+        {% endfor %}
+    </div>
+    <span class="end-label">Certain this message was in the text</span>
+</div>
+
+
+{{ next_button }}
+{{ endblock }}
