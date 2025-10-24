@@ -1,4 +1,4 @@
-# Anticipatory Utility and Donation for Immigration-Support NGOs
+# Anticipatory Utility (Perceived Control), Memory, and Immigration Attitudes
 An Online Experiment.<br>
 Chapter 2 for a cumulative doctoral dissertation. <br>
 Contributing to the DFG project "Big Structural Change - Mass Immigration". <br>
