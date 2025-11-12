@@ -4,11 +4,12 @@ Chapter 2 for a cumulative doctoral dissertation. <br>
 Contributing to the DFG project "Big Structural Change - Mass Immigration". <br>
 
 ## App names
-Pretest1: The draft code to test the understandbility of narratives.<br>
+Pilot1UK: full-scale pilot to be run in the UK.<br>
+Pilot1US: full-scale pilot to be run in the US.<br>
 
 ## Experiment times
-Pretest1: <br>
-Pretest2: <br>
-Pilot1: <br>
-Pilot2: <br>
+Pilot1UK: 27 Oct 2025<br>
+: <br>
+: <br>
+: <br>
 Main experiment: <br>
