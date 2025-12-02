@@ -33,10 +33,6 @@ class C(BaseConstants):
     PETITION = [
         dict(name='research', label="Some call for more publicly funded research (e.g., those funded by UKRI) "
                                     "into the connection between immigrant status and crime."),
-        dict(name='language', label="Some advocate for higher language requirements for all immigrants arriving in "
-                                    "the UK who are unemployed, in order to make them more employable."),
-        dict(name='period', label="Some propose reducing the period that immigrants are permitted to stay in the "
-                                  "UK after becoming unemployed."),
         dict(name='quota', label="Some demand lowering the quota of all types of immigrants allowed to enter the UK, "
                                  "EXCEPT those under the Skilled Worker category."),
     ]
@@ -96,16 +92,13 @@ class Player(BasePlayer):
     share = models.IntegerField(choices=range(1, 8))
     # Behavioral measurements: petitions
     research = models.BooleanField(blank=True, initial=0)
-    language = models.BooleanField(blank=True, initial=0)
-    period = models.BooleanField(blank=True, initial=0)
     quota = models.BooleanField(blank=True, initial=0)
 
     # Feedback, for pilot only
     sell = models.BooleanField(
-        label='Did you think during the study that we attempted to sell anything to you?',
+        label='Did you think that we attempted to sell anything to you during the study?',
         choices=[(True, 'Yes'), (False, 'No')],
-        widget=widgets.RadioSelect,
-        blank=True
+        widget=widgets.RadioSelect
     )
     purpose = models.LongStringField(
         label='Do you have any idea about the purpose of this study? If yes, please briefly describe in the text field. (optional)',
@@ -201,8 +194,7 @@ class Introduction(Page):
 
 class Scr(Page):
     form_model = 'player'
-    form_fields = ['region', 'propburglary', 'prophealth',
-                   'proplottery', 'propfriend']
+    form_fields = ['region', 'propburglary', 'prophealth', 'proplottery', 'propfriend']
 
 
 class ScreenedOut(Page):
@@ -252,25 +244,6 @@ class Info2(Page):
     def is_displayed(player: Player):
         return player.task != 'control'
 
-    @staticmethod
-    def vars_for_template(player):
-        # Map treatments to images and their values
-        image = {
-            'North East (England)': 'Pilot2UK/Slide2.PNG',
-            'North West (England)': 'Pilot2UK/Slide3.PNG',
-            'Yorkshire and The Humber (England)': 'Pilot2UK/Slide4.PNG',
-            'East Midlands (England)': 'Pilot2UK/Slide5.PNG',
-            'West Midlands (England)': 'Pilot2UK/Slide6.PNG',
-            'East (England)': 'Pilot2UK/Slide7.PNG',
-            'London (England)': 'Pilot2UK/Slide8.PNG',
-            'South East (England)': 'Pilot2UK/Slide9.PNG',
-            'South West (England)': 'Pilot2UK/Slide10.PNG',
-            'Wales': 'Pilot2UK/Slide11.PNG',
-        }
-        return {
-            'image': image.get(player.region),
-        }
-
 
 class Info3(Page):
     @staticmethod
@@ -281,11 +254,19 @@ class Info3(Page):
     def vars_for_template(player):
         # Map treatments to images and their values
         image = {
-            'hope': 'Pilot2UK/Slide12.PNG',
-            'unhope': 'Pilot2UK/Slide15.PNG',
+            'North East (England)': 'Pilot2UK/Slide3.PNG',
+            'North West (England)': 'Pilot2UK/Slide4.PNG',
+            'Yorkshire and The Humber (England)': 'Pilot2UK/Slide5.PNG',
+            'East Midlands (England)': 'Pilot2UK/Slide6.PNG',
+            'West Midlands (England)': 'Pilot2UK/Slide7.PNG',
+            'East (England)': 'Pilot2UK/Slide8.PNG',
+            'London (England)': 'Pilot2UK/Slide9.PNG',
+            'South East (England)': 'Pilot2UK/Slide10.PNG',
+            'South West (England)': 'Pilot2UK/Slide11.PNG',
+            'Wales': 'Pilot2UK/Slide12.PNG',
         }
         return {
-            'image': image.get(player.task),
+            'image': image.get(player.region),
         }
 
 
@@ -299,7 +280,7 @@ class Info4(Page):
         # Map treatments to images and their values
         image = {
             'hope': 'Pilot2UK/Slide13.PNG',
-            'unhope': 'Pilot2UK/Slide16.PNG',
+            'unhope': 'Pilot2UK/Slide15.PNG',
         }
         return {
             'image': image.get(player.task),
@@ -316,7 +297,7 @@ class Info5(Page):
         # Map treatments to images and their values
         image = {
             'hope': 'Pilot2UK/Slide14.PNG',
-            'unhope': 'Pilot2UK/Slide17.PNG',
+            'unhope': 'Pilot2UK/Slide16.PNG',
         }
         return {
             'image': image.get(player.task),

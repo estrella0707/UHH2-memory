@@ -9,12 +9,7 @@
 
 <p>Based on your experience in this study, please answer the following questions.</p>
 
-{% if player.task == 'simple_hope' or player.task == 'complex_hope' %}
-    {{ formfield player.sell }}
-{% endif %}
-
-{{ formfield player.purpose }}
-{{ formfield player.feedback }}
+{{ formfields }}
 
 {{ next_button }}
 {{ endblock }}

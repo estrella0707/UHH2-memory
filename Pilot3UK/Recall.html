@@ -10,18 +10,18 @@
 <link rel="stylesheet" href="{% static 'likert.css' %}">
 
 <p>Please recall the information you encounter in daily life (including, for example, news, social media, and conversations).<br>
-Based on those, how certain are you that the following claim can be inferred?<br><br>
-<i>Reducing the number of immigrants without stables jobs reduces the crime rate.</i></p>
+How often have you encountered information that implies the following claim?<br><br>
+<i>Reducing the number of immigrants will reduce the crime rate.</i></p>
 <div class="likert-line">
     <span class="question-label"></span>
-    <span class="end-label">Certain it CANNOT be inferred from those information</span>
+    <span class="end-label">Rarely</span>
     <div class="likert-scale">
         {% for i in "1234567" %}
         <input type="radio" name="recall" id="recall{{ i }}" value="{{ i }}">
         <label for="recall{{ i }}"></label>
         {% endfor %}
     </div>
-    <span class="end-label">Certain it CAN be inferred from those information</span>
+    <span class="end-label">Very frequently</span>
 </div>
 
 
