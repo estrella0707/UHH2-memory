@@ -10,7 +10,7 @@ Pilot2 on group-thinking and memory (online)
 # FUNCTION
 def creating_session(subsession):
     import itertools
-    task_cycle = itertools.cycle(['hope', 'unhope', 'control'])
+    task_cycle = itertools.cycle(['hope', 'unhope'])
     for player in subsession.get_players():
         player.task = next(task_cycle)
 
@@ -31,8 +31,8 @@ class C(BaseConstants):
 
     # List of petitions
     PETITION = [
-        dict(name='research', label="Some call for more publicly funded research (e.g., those funded by UKRI) "
-                                    "into the connection between immigrant status and crime."),
+        dict(name='research', label="Some call for more publicly funded research (e.g., funded by UKRI) "
+                                    "about the potential relation between immigrant status and crime."),
         dict(name='quota', label="Some demand lowering the quota of all types of immigrants allowed to enter the UK, "
                                  "EXCEPT those under the Skilled Worker category."),
     ]
@@ -64,12 +64,12 @@ class Player(BasePlayer):
 
     # Manipulation check question
     control = models.IntegerField(choices=range(1, 8))
-    afraid = likert1('Afraid')
     scared = likert1('Scared')
     nervous = likert1('Nervous')
-    jittery = likert1('Jittery')
-    active = likert1('Active')
-    inspired = likert1('Inspired')
+    calm = likert1('Calm')
+    relaxed = likert1('Relaxed')
+    encouraged = likert1('Encouraged')
+    discouraged = likert1('Discouraged')
 
     # Attention check question
     aq = models.BooleanField(
@@ -95,17 +95,12 @@ class Player(BasePlayer):
     quota = models.BooleanField(blank=True, initial=0)
 
     # Feedback, for pilot only
-    sell = models.BooleanField(
-        label='Did you think that we attempted to sell anything to you during the study?',
-        choices=[(True, 'Yes'), (False, 'No')],
-        widget=widgets.RadioSelect
-    )
     purpose = models.LongStringField(
-        label='Do you have any idea about the purpose of this study? If yes, please briefly describe in the text field. (optional)',
+        label='Do you have any idea about the purpose of this study? If yes, please briefly describe in the text field. (Optional)',
         blank=True
     )
     feedback = models.LongStringField(
-        label='If you have any other feedback to this study, please leave it here. (optional)',
+        label='If you have any other feedback to this study, please leave it here. (Optional)',
         blank=True
     )
 
@@ -170,7 +165,7 @@ class Player(BasePlayer):
     immi_familiar = models.IntegerField(choices=range(1, 8))
     immi_attitude = models.IntegerField(
         widget=widgets.RadioSelect,
-        label='Which of the following statements most closely reflect your view on the number of legal immigrants '
+        label='Which of the following statements most closely reflect your view on the number of <b>legal immigrants</b> '
               'who are permitted to come to the United Kingdom to live?',
         choices=[(1, 'The number of legal immigrants today is a very big problem. '
                      'We should ask many legal immigrants to leave the UK, '
@@ -234,22 +229,14 @@ class AC(Page):
 
 
 class Info1(Page):
-    @staticmethod
-    def is_displayed(player: Player):
-        return player.task != 'control'
+    pass
 
 
 class Info2(Page):
-    @staticmethod
-    def is_displayed(player: Player):
-        return player.task != 'control'
+    pass
 
 
 class Info3(Page):
-    @staticmethod
-    def is_displayed(player: Player):
-        return player.task != 'control'
-
     @staticmethod
     def vars_for_template(player):
         # Map treatments to images and their values
@@ -272,10 +259,6 @@ class Info3(Page):
 
 class Info4(Page):
     @staticmethod
-    def is_displayed(player: Player):
-        return player.task != 'control'
-
-    @staticmethod
     def vars_for_template(player):
         # Map treatments to images and their values
         image = {
@@ -288,10 +271,6 @@ class Info4(Page):
 
 
 class Info5(Page):
-    @staticmethod
-    def is_displayed(player: Player):
-        return player.task != 'control'
-
     @staticmethod
     def vars_for_template(player):
         # Map treatments to images and their values
@@ -310,7 +289,7 @@ class Emotion(Page):
     @staticmethod
     def get_form_fields(player: Player):
         import random
-        survey = ['afraid', 'scared', 'nervous', 'jittery', 'active', 'inspired']
+        survey = ['scared', 'nervous', 'discouraged', 'encouraged', 'calm', 'relaxed']
         random.shuffle(survey)
         return survey
 
@@ -321,10 +300,6 @@ class Control(Page):
 
 
 class Memory(Page):
-    @staticmethod
-    def is_displayed(player: Player):
-        return player.task != 'control'
-
     form_model = 'player'
     form_fields = ['memory']
 
@@ -347,13 +322,17 @@ class Petition(Page):
         return [petition['name'] for petition in C.PETITION]
 
 
+class Debrief1(Page):
+    pass
+
+
+class Debrief2(Page):
+    pass
+
+
 class Feedback(Page):
     form_model = 'player'
-    form_fields = ['sell', 'purpose', 'feedback']
-
-
-class Debrief(Page):
-    pass
+    form_fields = ['purpose', 'feedback']
 
 
 class ProlificCompletion(Page):
@@ -373,7 +352,5 @@ page_sequence = [
     Recall,  # selective recall of consumption
     NGO,  # intention to share information
     Petition,  # choose whether to receive emails
-    Feedback,
-    Debrief,
-    ProlificCompletion,
+    Debrief1, Debrief2, Feedback, ProlificCompletion,
 ]

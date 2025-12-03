@@ -8,17 +8,17 @@
 {{ block content }}
 {% load static %}
 <link rel="stylesheet" href="{% static 'likert.css' %}">
-<b>To what extent do you feel that you can control whether you become a victim of burglary? </b>
+<b>To what extent do you feel enabled to prevent yourself from being burglarized? </b>
 <div class="likert-line">
     <span class="question-label"></span>
-    <span class="end-label">Not at all controllable</span>
+    <span class="end-label">Not at all</span>
     <div class="likert-scale">
         {% for i in "1234567" %}
         <input type="radio" name="control" id="control{{ i }}" value="{{ i }}">
         <label for="control{{ i }}"></label>
         {% endfor %}
     </div>
-    <span class="end-label">Completely controllable</span>
+    <span class="end-label">Completely</span>
 </div>
 <br>
 
