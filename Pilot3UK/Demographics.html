@@ -45,20 +45,6 @@ To what extent you agree or disagree with the following statements: <i>The less 
 </div>
 <br>
 
-{{ formfield player.vote }}
-<div id="vote_yes_group">
-    {{ formfield player.vote_yes }}
-</div>
-<div id="vote_no_group">
-    {{ formfield player.vote_no }}
-</div>
-<style>
-#vote_yes_group, #vote_no_group {
-    display: none;
-}
-</style>
-<br>
-
 How much, if at all, are you worried about crimes in your daily life?
 <div class="likert-line">
     <span class="question-label"></span>
@@ -71,6 +57,20 @@ How much, if at all, are you worried about crimes in your daily life?
     </div>
     <span class="end-label">Very worried</span>
 </div>
+<br>
+
+{{ formfield player.vote }}
+<div id="vote_yes_group">
+    {{ formfield player.vote_yes }}
+</div>
+<div id="vote_no_group">
+    {{ formfield player.vote_no }}
+</div>
+<style>
+#vote_yes_group, #vote_no_group {
+    display: none;
+}
+</style>
 <br>
 
 How much, if at all, are you familiar with immigration issues in the UK?
