@@ -10,9 +10,9 @@
 <link rel="stylesheet" href="{% static 'likert.css' %}">
 
 <p>Please consider the information you encounter in daily life (including, for example, news, social media, and conversations).<br>
-How often have you encountered information that implies the following claim?<br>
-We just ask how often you have encountered this claim – <b>whether you think it is credible or not</b> - that implies this claim.<br><br>
-<i>Reducing the number of immigrants will reduce the crime rate.</i></p>
+How often have you encountered information that implies the claim that <i>reducing the number of immigrants will reduce the crime rate</i>?<br>
+We just ask how often you have encountered such information – <b>whether you think it is credible or not</b>.<br><br>
+<b>I have encountered information implying that <i>reducing the number of immigrants will reduce the crime rate</i>.</b></p>
 <div class="likert-line">
     <span class="question-label"></span>
     <span class="end-label">Rarely</span>
@@ -24,7 +24,23 @@ We just ask how often you have encountered this claim – <b>whether you think i
     </div>
     <span class="end-label">Very frequently</span>
 </div>
+<br>
 
+<p>Suppose your neighbours are convinced by the claim that <i>reducing the number of immigrants will reduce the crime rate</i>. Regardless of your own position, how much do you think they have legitimate reasons on their own for believing in this claim? </p>
+<div class="likert-line">
+    <span class="question-label"></span>
+    <span class="end-label">Not at all</span>
+    <div class="likert-scale">
+        {% for i in "1234567" %}
+        <input type="radio" name="legitimacy" id="legitimacy{{ i }}" value="{{ i }}">
+        <label for="legitimacy{{ i }}"></label>
+        {% endfor %}
+    </div>
+    <span class="end-label">Very much so</span>
+</div>
+<br>
+
+{{ formfield player.moreinfo }}
 
 {{ next_button }}
 {{ endblock }}
