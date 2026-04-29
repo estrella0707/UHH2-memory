@@ -96,8 +96,8 @@ class Player(BasePlayer):
     # Pre-treatment model belief
     pre_eu = models.IntegerField(
         widget=widgets.RadioSelect,
-        label='What do you think? Do immigrants from EU countries (e.g., Germany or Italy) contribute less or more '
-              'crimes than the average British citizen?',
+        label='What do you think? Do immigrants from EU countries (e.g., Poland, Romania, or Bulgaria) '
+              'commit less or more crimes than the average native British citizen?',
         choices=[(1, 'Much less'),
                  (2, 'Less'),
                  (3, 'About the same'),
@@ -106,8 +106,8 @@ class Player(BasePlayer):
     )
     pre_noneu = models.IntegerField(
         widget=widgets.RadioSelect,
-        label='What do you think? Do immigrants from non-EU countries (e.g., Serbia or Syria) contribute less or more '
-              'crimes than the average British citizen?',
+        label='What do you think? Do immigrants from non-EU countries (e.g., India, Pakistan, or Nigeria) '
+              'commit less or more crimes than the average native British citizen?',
         choices=[(1, 'Much less'),
                  (2, 'Less'),
                  (3, 'About the same'),
@@ -144,6 +144,7 @@ class Player(BasePlayer):
               'will experience a burglary in the next 20 years?'
     )
     bonus2 = models.FloatField()
+    bonus_total = models.FloatField()
 
     # Selective recall
     recall = models.IntegerField(choices=range(1, 8))
@@ -158,23 +159,23 @@ class Player(BasePlayer):
     # Post-treatment model belief
     post_eu = models.IntegerField(
         widget=widgets.RadioSelect,
-        label='What do you think? Would a slightly increased immigration from EU countries (e.g., Germany or Italy) '
-              'overall have a positive (increasing) or negative (decreasing) impact on UK’s crime rate?',
-        choices=[(1, 'Strongly negative impact'),
-                 (2, 'Negative impact'),
-                 (3, 'Neither positive nor negative'),
-                 (4, 'Positive impact'),
-                 (5, 'Strongly positive impact')],
+        label='What do you think? Would a slightly increased immigration from EU countries (e.g., Poland, Romania, or Bulgaria) '
+              'overall lead to an increasing or decreasing crime rate in the UK?',
+        choices=[(1, 'Strongly increasing rate'),
+                 (2, 'Increasing rate'),
+                 (3, 'Neither increasing nor decreasing rate'),
+                 (4, 'Decreasing rate'),
+                 (5, 'Strongly decreasing rate')],
     )
     post_noneu = models.IntegerField(
         widget=widgets.RadioSelect,
-        label='What do you think? Would a slightly increased immigration from non-EU countries (e.g., Serbia or Syria) '
-              'overall have a positive (increasing) or negative (decreasing) impact on UK’s crime rate?',
-        choices=[(1, 'Strongly negative impact'),
-                 (2, 'Negative impact'),
-                 (3, 'Neither positive nor negative'),
-                 (4, 'Positive impact'),
-                 (5, 'Strongly positive impact')],
+        label='What do you think? Would a slightly increased immigration from non-EU countries (e.g., India, Pakistan, or Nigeria) '
+              'overall lead to an increasing or decreasing crime rate in the UK?',
+        choices=[(1, 'Strongly increasing rate'),
+                 (2, 'Increasing rate'),
+                 (3, 'Neither increasing nor decreasing rate'),
+                 (4, 'Decreasing rate'),
+                 (5, 'Strongly decreasing rate')],
     )
 
     # Feedback, for pilot only
@@ -384,9 +385,7 @@ class Count(Page):
 
             return {
                 player.id_in_group: {
-                    "cell": cell,
-                    "score": player.score,
-                    "correct": True  # for initialization
+                    "cell": cell
                 }
             }
 
@@ -397,35 +396,30 @@ class Count(Page):
 
             if data["answer"] == correct_answer:
                 player.score += 1
-                cell = random_cell()
-                player.participant.vars["current_cell"] = cell
-                return {
-                    player.id_in_group: {
-                        "correct": True,
-                        "cell": cell,
-                        "score": player.score
-                    }
+
+            cell = random_cell()
+            player.participant.vars["current_cell"] = cell
+
+            return {
+                player.id_in_group: {
+                    "cell": cell
                 }
+            }
 
-            else:
-                return {
-                    player.id_in_group: {
-                        "correct": False,
-                        "cell": current_cell,
-                        "score": player.score
-                    }
-                }
-
-
-class CountFeedback(Page):
-    def vars_for_template(player):
+    @staticmethod
+    def before_next_page(player, timeout_happened):
         player.bonus1 = player.score * 0.02
+
+
+class CountEnd(Page):
+    pass
 
 
 class Memory(Page):
     form_model = 'player'
     form_fields = ['memory']
 
+    @staticmethod
     def before_next_page(player, timeout_happened):
         true_value = RATE20[player.region]
         guess = player.memory
@@ -439,6 +433,10 @@ class Memory(Page):
 class Recall(Page):
     form_model = 'player'
     form_fields = ['recall', 'legitimacy', 'moreinfo']
+
+    @staticmethod
+    def before_next_page(player, timeout_happened):
+        player.bonus_total = player.bonus1 + player.bonus2
 
 
 class Postbelief(Page):
@@ -459,6 +457,10 @@ class Feedback(Page):
     form_fields = ['purpose', 'feedback', 'AIuse']
 
 
+class BonusFeedback(Page):
+    pass
+
+
 class ProlificCompletion(Page):
     pass
 
@@ -472,9 +474,9 @@ page_sequence = [
     Info1, Info2, Info3, Info4, Info5,  # information slides
     Emotion,  # encourage/discourage
     Control,  # perceived control
-    CountIntro, Count, CountFeedback,  # filler task
+    CountIntro, Count, CountEnd, # filler task
     Memory,  # memory test
     Recall,  # selective recall
     Postbelief,  # post-treatment model belief
-    Debrief1, Debrief2, Feedback, ProlificCompletion,
+    Debrief1, Debrief2, Feedback, BonusFeedback, ProlificCompletion,
 ]

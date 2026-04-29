@@ -9,14 +9,11 @@
 
 <div>
     <h3>Count the black balls in cell: <span id="cellLabel"></span></h3>
-    <img src="/static/CountBlackBall.png" width="1000px">
+    <img src="/static/CountBlackBall.png" width="800px">
     <br><br>
 
     <input id="answer" type="number" autocomplete="off">
     <button type="button" onclick="submitAnswer()">Submit</button>
-
-    <p id="feedback" style="color:red;"></p>
-    <p>Score: <span id="score">0</span></p>
 </div>
 
 
@@ -26,9 +23,7 @@ let currentCell = null;
 
 function newQuestion(data) {
     currentCell = data.cell;
-
     document.getElementById("cellLabel").innerHTML = currentCell;
-    document.getElementById("feedback").innerHTML = "";
 }
 
 function submitAnswer() {
@@ -42,16 +37,8 @@ function submitAnswer() {
 }
 
 function liveRecv(data) {
-    document.getElementById("score").innerHTML = data.score;
-
-    if (data.correct) {
-        document.getElementById("answer").value = "";
-        newQuestion(data);
-    } else {
-        document.getElementById("feedback").innerHTML =
-            "This answer is incorrect. Please try again.";
-        document.getElementById("answer").value = "";
-    }
+    document.getElementById("answer").value = "";
+    newQuestion(data);
 }
 
 // initialization
