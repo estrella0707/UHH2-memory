@@ -11,13 +11,13 @@ Pilot3 on efficacy and memory (online)
 ROWS = ['A','B','C','D','E','F','G']
 COLS = [1,2,3,4,5,6]
 GRID_COUNTS = {
-    "A1": 14, "A2": 7, "A3": 7, "A4": 9, "A5": 4, "A6": 8,
-    "B1": 11, "B2": 7, "B3": 7, "B4": 9, "B5": 4, "B6": 7,
-    "C1": 9, "C2": 8, "C3": 6, "C4": 5, "C5": 5, "C6": 7,
-    "D1": 10, "D2": 6, "D3": 7, "D4": 4, "D5": 1, "D6": 5,
-    "E1": 10, "E2": 6, "E3": 6, "E4": 7, "E5": 6, "E6": 4,
-    "F1": 10, "F2": 7, "F3": 6, "F4": 6, "F5": 1, "F6": 7,
-    "G1": 9, "G2": 6, "G3": 6, "G4": 7, "G5": 3, "G6": 6
+    "A1": 8,  "A2": 10, "A3": 9,  "A4": 11, "A5": 18, "A6": 20,
+    "B1": 12, "B2": 9,  "B3": 13, "B4": 7,  "B5": 14, "B6": 9,
+    "C1": 7,  "C2": 15, "C3": 3,  "C4": 16, "C5": 6,  "C6": 17,
+    "D1": 17, "D2": 6,  "D3": 19, "D4": 4,  "D5": 18, "D6": 9,
+    "E1": 4,  "E2": 21, "E3": 12, "E4": 22, "E5": 13, "E6": 10,
+    "F1": 18, "F2": 8,  "F3": 20, "F4": 18, "F5": 25, "F6": 14,
+    "G1": 9,  "G2": 12, "G3": 9,  "G4": 22, "G5": 15, "G6": 10,
 }
 
 
@@ -311,16 +311,16 @@ class Info3(Page):
     def vars_for_template(player):
         # Map treatments to images and their values
         image = {
-            'North East (England)': 'Pilot2UK/Slide3.PNG',
-            'North West (England)': 'Pilot2UK/Slide4.PNG',
-            'Yorkshire and The Humber (England)': 'Pilot2UK/Slide5.PNG',
-            'East Midlands (England)': 'Pilot2UK/Slide6.PNG',
-            'West Midlands (England)': 'Pilot2UK/Slide7.PNG',
-            'East (England)': 'Pilot2UK/Slide8.PNG',
-            'London (England)': 'Pilot2UK/Slide9.PNG',
-            'South East (England)': 'Pilot2UK/Slide10.PNG',
-            'South West (England)': 'Pilot2UK/Slide11.PNG',
-            'Wales': 'Pilot2UK/Slide12.PNG',
+            'North East (England)': 'slides/Slide3.PNG',
+            'North West (England)': 'slides/Slide4.PNG',
+            'Yorkshire and The Humber (England)': 'slides/Slide5.PNG',
+            'East Midlands (England)': 'slides/Slide6.PNG',
+            'West Midlands (England)': 'slides/Slide7.PNG',
+            'East (England)': 'slides/Slide8.PNG',
+            'London (England)': 'slides/Slide9.PNG',
+            'South East (England)': 'slides/Slide10.PNG',
+            'South West (England)': 'slides/Slide11.PNG',
+            'Wales': 'slides/Slide12.PNG',
         }
         return {
             'image': image.get(player.region),
@@ -332,8 +332,8 @@ class Info4(Page):
     def vars_for_template(player):
         # Map treatments to images and their values
         image = {
-            'high': 'Pilot2UK/Slide13.PNG',
-            'low': 'Pilot2UK/Slide15.PNG',
+            'high': 'slides/Slide13.PNG',
+            'low': 'slides/Slide15.PNG',
         }
         return {
             'image': image.get(player.efficacy),
@@ -345,8 +345,8 @@ class Info5(Page):
     def vars_for_template(player):
         # Map treatments to images and their values
         image = {
-            'high': 'Pilot2UK/Slide14.PNG',
-            'low': 'Pilot2UK/Slide16.PNG',
+            'high': 'slides/Slide14.PNG',
+            'low': 'slides/Slide16.PNG',
         }
         return {
             'image': image.get(player.efficacy),
