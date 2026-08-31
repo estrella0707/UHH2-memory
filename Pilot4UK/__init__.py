@@ -20,6 +20,19 @@ GRID_COUNTS = {
     "G1": 9,  "G2": 12, "G3": 9,  "G4": 22, "G5": 15, "G6": 10,
 }
 
+CELLS = [
+    "C1",
+    "E2",
+    "C4",
+    "G3",
+    "A6",
+    "F2",
+    "B3",
+    "G5",
+    "F1",
+    "D6",
+]  # participants do the same questions at this fixed order
+
 
 # TRUE RATE
 CRIME_RATE = {
@@ -244,6 +257,7 @@ class Player(BasePlayer):
     )
 
     # Filler task score
+    answer = models.IntegerField(blank=True)
     score = models.IntegerField(initial=0)
     bonus1 = models.FloatField(initial=0)
 
@@ -471,46 +485,170 @@ class CountIntro(Page):
     pass
 
 
-class Count(Page):
-    timeout_seconds = 120  # two minutes
+class CountC1(Page):
+    timeout_seconds = 12
+    form_model = 'player'
+    form_fields = ['answer']
 
     @staticmethod
-    def live_method(player, data):
-        # start task
-        if data["type"] == "start":
-            cell = random_cell()
-            player.participant.vars["current_cell"] = cell
-
-            return {
-                player.id_in_group: {
-                    "cell": cell
-                }
-            }
-
-        # submit answer
-        if data["type"] == "answer":
-            current_cell = player.participant.vars["current_cell"]
-            correct_answer = GRID_COUNTS[current_cell]
-
-            if data["answer"] == correct_answer:
-                player.score += 1
-
-            cell = random_cell()
-            player.participant.vars["current_cell"] = cell
-
-            return {
-                player.id_in_group: {
-                    "cell": cell
-                }
-            }
+    def vars_for_template(player):
+        return {"cell": "C1"}
 
     @staticmethod
     def before_next_page(player, timeout_happened):
-        player.bonus1 = player.score * 0.02
+        answer = player.field_maybe_none('answer')
+        if answer == GRID_COUNTS["C1"]:
+            player.score += 1
+
+
+class CountE2(Page):
+    timeout_seconds = 12
+    form_model = 'player'
+    form_fields = ['answer']
+
+    @staticmethod
+    def vars_for_template(player):
+        return {"cell": "E2"}
+
+    @staticmethod
+    def before_next_page(player, timeout_happened):
+        answer = player.field_maybe_none('answer')
+        if answer == GRID_COUNTS["E2"]:
+            player.score += 1
+
+
+class CountC4(Page):
+    timeout_seconds = 12
+    form_model = 'player'
+    form_fields = ['answer']
+
+    @staticmethod
+    def vars_for_template(player):
+        return {"cell": "C4"}
+
+    @staticmethod
+    def before_next_page(player, timeout_happened):
+        answer = player.field_maybe_none('answer')
+        if answer == GRID_COUNTS["C4"]:
+            player.score += 1
+
+
+class CountG3(Page):
+    timeout_seconds = 12
+    form_model = 'player'
+    form_fields = ['answer']
+
+    @staticmethod
+    def vars_for_template(player):
+        return {"cell": "G3"}
+
+    @staticmethod
+    def before_next_page(player, timeout_happened):
+        answer = player.field_maybe_none('answer')
+        if answer == GRID_COUNTS["G3"]:
+            player.score += 1
+
+
+class CountA6(Page):
+    timeout_seconds = 12
+    form_model = 'player'
+    form_fields = ['answer']
+
+    @staticmethod
+    def vars_for_template(player):
+        return {"cell": "A6"}
+
+    @staticmethod
+    def before_next_page(player, timeout_happened):
+        answer = player.field_maybe_none('answer')
+        if answer == GRID_COUNTS["A6"]:
+            player.score += 1
+
+
+class CountF2(Page):
+    timeout_seconds = 12
+    form_model = 'player'
+    form_fields = ['answer']
+
+    @staticmethod
+    def vars_for_template(player):
+        return {"cell": "F2"}
+
+    @staticmethod
+    def before_next_page(player, timeout_happened):
+        answer = player.field_maybe_none('answer')
+        if answer == GRID_COUNTS["F2"]:
+            player.score += 1
+
+
+class CountB3(Page):
+    timeout_seconds = 12
+    form_model = 'player'
+    form_fields = ['answer']
+
+    @staticmethod
+    def vars_for_template(player):
+        return {"cell": "B3"}
+
+    @staticmethod
+    def before_next_page(player, timeout_happened):
+        answer = player.field_maybe_none('answer')
+        if answer == GRID_COUNTS["B3"]:
+            player.score += 1
+
+
+class CountG5(Page):
+    timeout_seconds = 12
+    form_model = 'player'
+    form_fields = ['answer']
+
+    @staticmethod
+    def vars_for_template(player):
+        return {"cell": "G5"}
+
+    @staticmethod
+    def before_next_page(player, timeout_happened):
+        answer = player.field_maybe_none('answer')
+        if answer == GRID_COUNTS["G5"]:
+            player.score += 1
+
+
+class CountF1(Page):
+    timeout_seconds = 12
+    form_model = 'player'
+    form_fields = ['answer']
+
+    @staticmethod
+    def vars_for_template(player):
+        return {"cell": "F1"}
+
+    @staticmethod
+    def before_next_page(player, timeout_happened):
+        answer = player.field_maybe_none('answer')
+        if answer == GRID_COUNTS["F1"]:
+            player.score += 1
+
+
+class CountD6(Page):
+    timeout_seconds = 12
+    form_model = 'player'
+    form_fields = ['answer']
+
+    @staticmethod
+    def vars_for_template(player):
+        return {"cell": "D6"}
+
+    @staticmethod
+    def before_next_page(player, timeout_happened):
+        answer = player.field_maybe_none('answer')
+        if answer == GRID_COUNTS["D6"]:
+            player.score += 1
 
 
 class CountEnd(Page):
-    pass
+    @staticmethod
+    def before_next_page(player, timeout_happened):
+        player.bonus1 = player.score * 0.02
 
 
 class Memory(Page):
@@ -592,7 +730,8 @@ page_sequence = [
     Info1, Info2, Info3, Info4, Info5,  # information slides
     Emotion,  # encourage/discourage
     Control,  # perceived control
-    CountIntro, Count, CountEnd,  # filler task
+    CountIntro, CountC1, CountE2, CountC4, CountG3, CountA6,
+    CountF2, CountB3, CountG5, CountF1, CountD6, CountEnd,  # filler task
     Memory,  # memory test
     Postrecall,  # selective recall
     Postbelief,  # post-treatment model belief

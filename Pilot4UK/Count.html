@@ -8,43 +8,30 @@
 {{ block content }}
 
 <div>
-    <h3>Count the black balls in cell: <span id="cellLabel"></span></h3>
+    <h3>Count the black balls in cell: {{ cell }}</h3>
     <img src="/static/CountBlackBall.png" width="800px">
     <br><br>
 
-    <input id="answer" type="number" autocomplete="off">
-    <button type="button" onclick="submitAnswer()">Submit</button>
+    <input type="number" name="answer" id="answer" autocomplete="off" autofocus>
 </div>
 
-
+<div>
+    Time remaining:
+    <span id="timer">10</span>
+</div>
 
 <script>
-let currentCell = null;
+    let timeLeft = 10;
 
-function newQuestion(data) {
-    currentCell = data.cell;
-    document.getElementById("cellLabel").innerHTML = currentCell;
-}
+    const timer = setInterval(function () {
+        timeLeft -= 1;
+        document.getElementById("timer").innerText = timeLeft;
 
-function submitAnswer() {
-    let answer = parseInt(document.getElementById("answer").value);
-
-    liveSend({
-        type: "answer",
-        cell: currentCell,
-        answer: answer
-    });
-}
-
-function liveRecv(data) {
-    document.getElementById("answer").value = "";
-    newQuestion(data);
-}
-
-// initialization
-document.addEventListener("DOMContentLoaded", function () {
-    liveSend({type: "start"});
-});
+        if (timeLeft <= 0) {
+            clearInterval(timer);
+            document.querySelector("form").submit();
+        }
+    }, 1000);
 </script>
 
 {{ endblock }}
