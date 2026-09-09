@@ -64,21 +64,6 @@ How much, if at all, are you worried about crimes in your daily life?
 {{ formfield_errors 'crime_worry' }}
 <br>
 
-How much, if at all, are you worried about major health issues (e.g. cancer) in your daily life?
-<div class="likert-line">
-    <span class="question-label"></span>
-    <span class="end-label">Not worried at all</span>
-    <div class="likert-scale">
-        {% for i in "1234567" %}
-        <input type="radio" name="cancer_worry" id="cancer_worry{{ i }}" value="{{ i }}">
-        <label for="cancer_worry{{ i }}"></label>
-        {% endfor %}
-    </div>
-    <span class="end-label">Very worried</span>
-</div>
-{{ formfield_errors 'cancer_worry' }}
-<br>
-
 {{ formfield player.vote }}
 <div id="vote_yes_group">
     {{ formfield player.vote_yes }}

@@ -48,24 +48,9 @@ CRIME_RATE = {
     'Wales': 8.22,
 }
 
-CANCER_RATE = {
-    'North East (England)': 12.99,
-    'North West (England)': 11.78,
-    'Yorkshire and The Humber (England)': 11.89,
-    'East Midlands (England)': 11.54,
-    'West Midlands (England)': 11.27,
-    'East (England)': 11.61,
-    'London (England)': 8.50,
-    'South East (England)': 12.06,
-    'South West (England)': 12.59,
-    'Wales': 12.55,
-}
-
-
 # FUNCTION
 def creating_session(subsession):
-    treatment_cycle = itertools.cycle(['crime_baseline', 'crime_recall', 'high', 'low',
-                                       'cancer_baseline', 'cancer_recall'])
+    treatment_cycle = itertools.cycle(['recall', 'high', 'low'])
     for player in subsession.get_players():
         player.treatment = next(treatment_cycle)
 
@@ -78,13 +63,9 @@ def likert1(label):
         widget=widgets.RadioSelect)
 
 
-def random_cell():
-    return random.choice([r + str(c) for r in ROWS for c in COLS])
-
-
 # PARAMETERS
 class C(BaseConstants):
-    NAME_IN_URL = 'pt3uk'
+    NAME_IN_URL = 'pt4uk'
     PLAYERS_PER_GROUP = None
     NUM_ROUNDS = 1
 
@@ -118,6 +99,17 @@ class Player(BasePlayer):
               'record the numbers on the information slides, please tick "Yes". '
               'You will receive the study reward independent of your answer.'
     )
+
+    # Attention check question
+    aq = models.BooleanField(
+        label='',
+        choices=[(True, 'Yes, I have devoted full attention to the questions so far and '
+                        'I think you should use my responses for your study.'),
+                 (False, 'No, I have NOT devoted full attention to the questions so far and '
+                         'I think you should NOT use my responses for your study.')],
+        widget=widgets.RadioSelect
+    )
+    aqvideo = models.BooleanField(initial=0)
 
     # Treatment assignment
     treatment = models.StringField()
@@ -180,7 +172,6 @@ class Player(BasePlayer):
         blank=True,
     )
     crime_worry = models.IntegerField(choices=range(1, 8))
-    cancer_worry = models.IntegerField(choices=range(1, 8))
     immi_familiar = models.IntegerField(choices=range(1, 8))
     immi_attitude = models.IntegerField(
         widget=widgets.RadioSelect,
@@ -234,11 +225,7 @@ class Player(BasePlayer):
                  (5, 'Much more')],
     )
 
-    # Pre-treatment recall
-    pre_recall = models.IntegerField(choices=range(1, 8))
-
     # Manipulation check question
-    control = models.IntegerField(choices=range(1, 8))
     scared = likert1('Scared')
     nervous = likert1('Nervous')
     calm = likert1('Calm')
@@ -246,15 +233,12 @@ class Player(BasePlayer):
     encouraged = likert1('Encouraged')
     discouraged = likert1('Discouraged')
 
-    # Attention check question
-    aq = models.BooleanField(
-        label='',
-        choices=[(True, 'Yes, I have devoted full attention to the questions so far and '
-                        'I think you should use my responses for your study.'),
-                 (False, 'No, I have NOT devoted full attention to the questions so far and '
-                         'I think you should NOT use my responses for your study.')],
-        widget=widgets.RadioSelect
-    )
+    control = models.IntegerField(choices=range(1, 8))
+
+    res_ind = models.IntegerField(choices=range(1, 8))
+    res_com = models.IntegerField(choices=range(1, 8))
+    res_city = models.IntegerField(choices=range(1, 8))
+    res_state = models.IntegerField(choices=range(1, 8))
 
     # Filler task score
     answer = models.IntegerField(blank=True)
@@ -271,13 +255,9 @@ class Player(BasePlayer):
 
     # Selective recall
     post_recall = models.IntegerField(choices=range(1, 8))
-    legitimacy = models.IntegerField(choices=range(1, 8))
-    moreinfo = models.BooleanField(
-        label='Do you want to get more evidence related to this debate?',
-        choices=[(True, 'Yes, I would like to'),
-                 (False, 'No, I would not like to')],
-        widget=widgets.RadioSelect
-    )
+    recall1 = models.IntegerField(choices=range(1, 8))
+    recall2 = models.IntegerField(choices=range(1, 8))
+    recall3 = models.IntegerField(choices=range(1, 8))
 
     # Post-treatment model belief
     post_eu = models.IntegerField(
@@ -314,10 +294,6 @@ class Player(BasePlayer):
         label='Have you or your close family experienced burglary in your life? (Optional)',
         blank=True
     )
-    expcancer = models.BooleanField(
-        label='Have you or your close family experienced cancer in your life? (Optional)',
-        blank=True
-    )
     # experimenter demand effect
     believe = models.BooleanField(blank=True, initial=0)
     against = models.BooleanField(blank=True, initial=0)
@@ -334,12 +310,23 @@ class Consent(Page):
     pass
 
 
+class ACvideo(Page):
+    form_model = 'player'
+    form_fields = ['answer']
+
+    @staticmethod
+    def before_next_page(player, timeout_happened):
+        answer = player.field_maybe_none('answer')
+        if answer == 3169:
+            player.aqvideo = 1
+
+
 class Demographics(Page):
     form_model = 'player'
     form_fields = ['age', 'gender', 'education', 'employ', 'income',
                    'region', 'origin_father', 'origin_mother', 'stand',
                    'vote', 'vote_yes', 'vote_no',
-                   'crime_worry', 'cancer_worry', 'immi_familiar', 'immi_attitude']
+                   'crime_worry', 'immi_familiar', 'immi_attitude']
 
 
 class BaseExpectation(Page):
@@ -352,60 +339,23 @@ class Prebelief(Page):
     form_fields = ['pre_eu', 'pre_noneu']
 
 
-class Prerecall(Page):
-    @staticmethod
-    def is_displayed(player: Player):
-        return (player.treatment == 'crime_recall' or player.treatment == 'cancer_recall'
-                or player.treatment == 'high' or player.treatment == 'low')
-
-    form_model = 'player'
-    form_fields = ['pre_recall']
-
-
 class AC(Page):
     form_model = 'player'
     form_fields = ['aq']
 
 
 class Info1(Page):
-    @staticmethod
-    def vars_for_template(player):
-        # Map treatments to images and their values
-        image = {
-            'crime_baseline': 'crime/Slide1.PNG',
-            'crime_recall': 'crime/Slide1.PNG',
-            'high': 'crime/Slide1.PNG',
-            'low': 'crime/Slide1.PNG',
-            'cancer_baseline': 'cancer/Slide1.PNG',
-            'cancer_recall': 'cancer/Slide1.PNG'
-        }
-        return {
-            'image': image.get(player.treatment),
-        }
+    pass
 
 
 class Info2(Page):
-    @staticmethod
-    def vars_for_template(player):
-        # Map treatments to images and their values
-        image = {
-            'crime_baseline': 'crime/Slide2.PNG',
-            'crime_recall': 'crime/Slide2.PNG',
-            'high': 'crime/Slide2.PNG',
-            'low': 'crime/Slide2.PNG',
-            'cancer_baseline': 'cancer/Slide2.PNG',
-            'cancer_recall': 'cancer/Slide2.PNG'
-        }
-        return {
-            'image': image.get(player.treatment),
-        }
+    pass
 
 
 class Info3(Page):
     @staticmethod
     def vars_for_template(player):
-        # Map treatments to images and their values
-        region_slide_mapping = {
+        image = {
             'North East (England)': 'Slide3.PNG',
             'North West (England)': 'Slide4.PNG',
             'Yorkshire and The Humber (England)': 'Slide5.PNG',
@@ -417,17 +367,8 @@ class Info3(Page):
             'South West (England)': 'Slide11.PNG',
             'Wales': 'Slide12.PNG',
         }
-
-        if player.treatment in ['crime_baseline', 'crime_recall', 'high', 'low']:
-            folder = 'crime'
-        elif player.treatment in ['cancer_baseline', 'cancer_recall']:
-            folder = 'cancer'
-
-        slide_name = region_slide_mapping.get(player.region)
-        image_path = f"{folder}/{slide_name}" if slide_name else None
-
         return {
-            'image': image_path,
+            'image': image.get(player.region),
         }
 
 
@@ -438,10 +379,9 @@ class Info4(Page):
 
     @staticmethod
     def vars_for_template(player):
-        # Map treatments to images and their values
         image = {
-            'high': 'crime/Slide13.PNG',
-            'low': 'crime/Slide15.PNG',
+            'high': 'Slide13.PNG',
+            'low': 'Slide15.PNG',
         }
         return {
             'image': image.get(player.treatment),
@@ -455,10 +395,9 @@ class Info5(Page):
 
     @staticmethod
     def vars_for_template(player):
-        # Map treatments to images and their values
         image = {
-            'high': 'crime/Slide14.PNG',
-            'low': 'crime/Slide16.PNG',
+            'high': 'Slide14.PNG',
+            'low': 'Slide16.PNG',
         }
         return {
             'image': image.get(player.treatment),
@@ -479,6 +418,11 @@ class Emotion(Page):
 class Control(Page):
     form_model = 'player'
     form_fields = ['control']
+
+
+class Responsibility(Page):
+    form_model = 'player'
+    form_fields = ['res_ind', 'res_com', 'res_city', 'res_state']
 
 
 class CountIntro(Page):
@@ -657,26 +601,18 @@ class Memory(Page):
 
     @staticmethod
     def before_next_page(player, timeout_happened):
-        if player.treatment in ['crime_baseline', 'crime_recall', 'high', 'low']:
-            true_value = CRIME_RATE.get(player.region)
-        elif player.treatment in ['cancer_baseline', 'cancer_recall']:
-            true_value = CANCER_RATE.get(player.region)
+        true_value = CRIME_RATE.get(player.region)
         guess = player.memory
 
-        if abs(guess - true_value) <= 0.3:
+        if abs(guess - true_value) <= 0.1:
             player.bonus2 = 0.20
         else:
             player.bonus2 = 0
 
 
 class Postrecall(Page):
-    @staticmethod
-    def is_displayed(player: Player):
-        return (player.treatment == 'crime_recall' or player.treatment == 'cancer_recall'
-                or player.treatment == 'high' or player.treatment == 'low')
-
     form_model = 'player'
-    form_fields = ['post_recall', 'legitimacy', 'moreinfo']
+    form_fields = ['post_recall', 'recall1', 'recall2', 'recall3']
 
 
 class Postbelief(Page):
@@ -686,7 +622,7 @@ class Postbelief(Page):
 
 class Feedback1(Page):
     form_model = 'player'
-    form_fields = ['purpose', 'feedback', 'AIuse', 'record', 'expcrime', 'expcancer']
+    form_fields = ['purpose', 'feedback', 'AIuse', 'record', 'expcrime']
 
     @staticmethod
     def before_next_page(player, timeout_happened):
@@ -722,14 +658,15 @@ class ProlificCompletion(Page):
 
 page_sequence = [
     Introduction, Consent,
+    ACvideo,  # video attention check for bot detection
     Demographics,
     BaseExpectation,  # record optimist/pessimist
     Prebelief,  # pre-treatment model belief
-    Prerecall,  # recall treatment
     AC,  # attention check
     Info1, Info2, Info3, Info4, Info5,  # information slides
     Emotion,  # encourage/discourage
-    Control,  # perceived control
+    Control,  # perceived efficacy
+    Responsibility,  # responsibility attrition
     CountIntro, CountC1, CountE2, CountC4, CountG3, CountA6,
     CountF2, CountB3, CountG5, CountF1, CountD6, CountEnd,  # filler task
     Memory,  # memory test

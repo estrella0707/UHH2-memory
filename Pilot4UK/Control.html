@@ -8,11 +8,7 @@
 {{ block content }}
 {% load static %}
 <link rel="stylesheet" href="{% static 'likert.css' %}">
-{% if player.treatment == 'crime_baseline' or player.treatment == 'crime_recall' or player.treatment == 'high' or player.treatment == 'low' %}
-    <b>To what extent do you feel enabled to prevent yourself from being burglarized? </b>
-{% elif player.treatment == 'cancer_baseline' or player.treatment == 'cancer_recall' %}
-    <b>To what extent do you feel enabled to prevent yourself from getting a cancer? </b>
-{% endif %}
+<b>To what extent do you feel enabled to prevent yourself from being burglarized? </b>
 <div class="likert-line">
     <span class="question-label"></span>
     <span class="end-label">Not at all</span>

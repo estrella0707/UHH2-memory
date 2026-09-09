@@ -9,10 +9,25 @@
 {% load static %}
 <link rel="stylesheet" href="{% static 'likert.css' %}">
 
-<p>Please consider the information you encounter in daily life (including, for example, news, social media, and conversations).<br>
-How often have you encountered information that implies the claim that <i>reducing the number of immigrants will reduce the crime rate</i>?<br>
+<p>Please consider the information you encounter in daily life (including, for example, news, social media, and conversations). How often have you encountered information that implies the claims on what will reduce the crime rate?<br>
 We just ask how often you have encountered such information – <b>whether you think it is credible or not</b>.<br>
 Crime rate is defined as the number of crimes committed in the UK per 100.000 people.<br><br>
+
+I have encountered information implying that <i>reducing unemployment and social inequality will reduce the crime rate</i>.</p>
+<div class="likert-line">
+    <span class="question-label"></span>
+    <span class="end-label">Rarely</span>
+    <div class="likert-scale">
+        {% for i in "1234567" %}
+        <input type="radio" name="recall1" id="recall1{{ i }}" value="{{ i }}">
+        <label for="recall1{{ i }}"></label>
+        {% endfor %}
+    </div>
+    <span class="end-label">Very frequently</span>
+</div>
+{{ formfield_errors 'recall1' }}
+<br>
+
 I have encountered information implying that <i>reducing the number of immigrants will reduce the crime rate</i>.</p>
 <div class="likert-line">
     <span class="question-label"></span>
@@ -28,22 +43,35 @@ I have encountered information implying that <i>reducing the number of immigrant
 {{ formfield_errors 'post_recall' }}
 <br>
 
-<p>Suppose your neighbours are convinced by the claim that <i>reducing the number of immigrants will reduce the crime rate</i>. Regardless of your own position, how much do you think they have legitimate reasons on their own for believing in this claim? </p>
+I have encountered information implying that <i>stronger sentencing and more police presence will reduce the crime rate</i>.</p>
 <div class="likert-line">
     <span class="question-label"></span>
-    <span class="end-label">Not at all</span>
+    <span class="end-label">Rarely</span>
     <div class="likert-scale">
         {% for i in "1234567" %}
-        <input type="radio" name="legitimacy" id="legitimacy{{ i }}" value="{{ i }}">
-        <label for="legitimacy{{ i }}"></label>
+        <input type="radio" name="recall2" id="recall2{{ i }}" value="{{ i }}">
+        <label for="recall2{{ i }}"></label>
         {% endfor %}
     </div>
-    <span class="end-label">Very much so</span>
+    <span class="end-label">Very frequently</span>
 </div>
-{{ formfield_errors 'legitimacy' }}
+{{ formfield_errors 'recall2' }}
 <br>
 
-{{ formfield player.moreinfo }}
+I have encountered information implying that <i>improving neighbourhood conditions will reduce the crime rate</i>.</p>
+<div class="likert-line">
+    <span class="question-label"></span>
+    <span class="end-label">Rarely</span>
+    <div class="likert-scale">
+        {% for i in "1234567" %}
+        <input type="radio" name="recall3" id="recall3{{ i }}" value="{{ i }}">
+        <label for="recall3{{ i }}"></label>
+        {% endfor %}
+    </div>
+    <span class="end-label">Very frequently</span>
+</div>
+{{ formfield_errors 'recall3' }}
+
 
 {{ next_button }}
 {{ endblock }}

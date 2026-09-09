@@ -1,0 +1,67 @@
+{{ block title }}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous">
+{{ endblock }}
+
+{{ block content }}
+{% load static %}
+<link rel="stylesheet" href="{% static 'likert.css' %}">
+<b>To what extent do you think should the following individuals, groups, or institution take action to lower the risk of burglary?</b>
+
+<div class="likert-line">
+    <span class="question-label">The individual or household should take action to protect themselves.</span>
+    <span class="end-label">Not at all</span>
+    <div class="likert-scale">
+        {% for i in "1234567" %}
+        <input type="radio" name="res_ind" id="res_ind{{ i }}" value="{{ i }}">
+        <label for="res_ind{{ i }}"></label>
+        {% endfor %}
+    </div>
+    <span class="end-label">Completely</span>
+</div>
+{{ formfield_errors 'res_ind' }}
+
+<div class="likert-line">
+    <span class="question-label">The neighbourhood or council should take action to protect their community.</span>
+    <span class="end-label">Not at all</span>
+    <div class="likert-scale">
+        {% for i in "1234567" %}
+        <input type="radio" name="res_com" id="res_com{{ i }}" value="{{ i }}">
+        <label for="res_com{{ i }}"></label>
+        {% endfor %}
+    </div>
+    <span class="end-label">Completely</span>
+</div>
+{{ formfield_errors 'res_com' }}
+
+<div class="likert-line">
+    <span class="question-label">The city government should take action to protect their inhabitants.</span>
+    <span class="end-label">Not at all</span>
+    <div class="likert-scale">
+        {% for i in "1234567" %}
+        <input type="radio" name="res_city" id="res_city{{ i }}" value="{{ i }}">
+        <label for="res_city{{ i }}"></label>
+        {% endfor %}
+    </div>
+    <span class="end-label">Completely</span>
+</div>
+{{ formfield_errors 'res_city' }}
+
+<div class="likert-line">
+    <span class="question-label">The national government should take action to protect their citizens.</span>
+    <span class="end-label">Not at all</span>
+    <div class="likert-scale">
+        {% for i in "1234567" %}
+        <input type="radio" name="res_state" id="res_state{{ i }}" value="{{ i }}">
+        <label for="res_state{{ i }}"></label>
+        {% endfor %}
+    </div>
+    <span class="end-label">Completely</span>
+</div>
+{{ formfield_errors 'res_state' }}
+<br>
+
+{{ next_button }}
+{{ endblock }}

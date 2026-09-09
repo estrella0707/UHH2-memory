@@ -38,12 +38,3 @@ Debrief
 
 <button class="btn btn-primary" style="display: none" id="next-button">Next</button>
 {{ endblock }}
-
-{{ block scripts }}
-    <script>
-        // After 10 seconds, display the "Next" button
-        setTimeout(function() {
-        document.getElementById('next-button').style.display = 'block';
-        }, 10 * 1000);
-    </script>
-{{ endblock }}

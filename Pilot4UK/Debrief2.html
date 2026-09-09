@@ -22,12 +22,3 @@ Debrief
 
 <button class="btn btn-primary" style="display: none" id="next-button">Next</button>
 {{ endblock }}
-
-{{ block scripts }}
-    <script>
-        // After 15 seconds, display the "Next" button
-        setTimeout(function() {
-        document.getElementById('next-button').style.display = 'block';
-        }, 15 * 1000);
-    </script>
-{{ endblock }}
