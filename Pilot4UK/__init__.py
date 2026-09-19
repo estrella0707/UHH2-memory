@@ -315,10 +315,24 @@ class ACvideo(Page):
     form_fields = ['answer']
 
     @staticmethod
+    def error_message(player, values):
+        if values['answer'] == 3169:
+            return
+        player.aqvideo_attempts += 1
+        if player.aqvideo_attempts < 2:
+            return 'You have typed in wrong digits. Please try again.'
+
+    @staticmethod
     def before_next_page(player, timeout_happened):
         answer = player.field_maybe_none('answer')
         if answer == 3169:
             player.aqvideo = 1
+
+
+class ACvideoFail(Page):
+    @staticmethod
+    def is_displayed(player: Player):
+        return player.aqvideo != 1
 
 
 class Demographics(Page):
@@ -638,10 +652,7 @@ class Feedback2(Page):
 
 
 class Debrief1(Page):
-    @staticmethod
-    def is_displayed(player: Player):
-        return (player.treatment == 'crime_baseline' or player.treatment == 'crime_recall'
-                or player.treatment == 'high' or player.treatment == 'low')
+    pass
 
 
 class Debrief2(Page):
@@ -659,6 +670,7 @@ class ProlificCompletion(Page):
 page_sequence = [
     Introduction, Consent,
     ACvideo,  # video attention check for bot detection
+    ACvideoFail,  # dead end for participants who failed the bot check twice
     Demographics,
     BaseExpectation,  # record optimist/pessimist
     Prebelief,  # pre-treatment model belief
