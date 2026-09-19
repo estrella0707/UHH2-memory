@@ -109,6 +109,7 @@ class Player(BasePlayer):
                          'I think you should NOT use my responses for your study.')],
         widget=widgets.RadioSelect
     )
+    aqvideo_attempts = models.IntegerField(initial=0)
     aqvideo = models.BooleanField(initial=0)
 
     # Treatment assignment
