@@ -330,7 +330,7 @@ class ACvideo(Page):
             player.aqvideo = 1
 
 
-class ACvideoFail(Page):
+class ACvideofail(Page):
     @staticmethod
     def is_displayed(player: Player):
         return player.aqvideo != 1
@@ -671,7 +671,7 @@ class ProlificCompletion(Page):
 page_sequence = [
     Introduction, Consent,
     ACvideo,  # video attention check for bot detection
-    ACvideoFail,  # dead end for participants who failed the bot check twice
+    ACvideofail,  # dead end for participants who failed the bot check twice
     Demographics,
     BaseExpectation,  # record optimist/pessimist
     Prebelief,  # pre-treatment model belief
