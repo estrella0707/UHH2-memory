@@ -138,7 +138,7 @@ class Player(BasePlayer):
                  (3, 'The number of legal immigrants today is somewhat of a problem. '
                      'We should try and decrease by a bit the number permitted to come to the UK. '),
                  (4, 'The number of legal immigrants today is not a problem. '
-                     'We should keep letting in the same number of immigrants to come to the UK. '),
+                     'We should keep letting the same number of legal immigrants to come to the UK. '),
                  (5, 'The number of legal immigrants today is not a problem at all. '
                      'We should let even more legal immigrants come to the UK. ')
                  ],

@@ -9,7 +9,7 @@
 {% load static %}
 <link rel="stylesheet" href="{% static 'likert.css' %}">
 
-{% if player.treatment != 'crime' or player.treatment == 'neutral' %}
+{% if player.treatment == 'crime' or player.treatment == 'neutral' %}
 <b>To what extent do you feel enabled to prevent yourself from being burglarized? </b>
 <div class="likert-line">
     <span class="question-label"></span>
