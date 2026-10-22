@@ -7,6 +7,12 @@ SESSION_CONFIGS = [
         display_name="Pilot4UK",
         app_sequence=['Pilot4UK'],
         num_demo_participants=20,
+    ),
+    dict(
+        name='Study1',
+        display_name="Study1",
+        app_sequence=['Study1'],
+        num_demo_participants=20,
     )
 ]
 
